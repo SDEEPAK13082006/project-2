@@ -445,6 +445,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (vTitle && vConfig.title) vTitle.innerText = vConfig.title;
     if (vSubtitle && vConfig.subtitle) vSubtitle.innerText = vConfig.subtitle;
 
+    // Support HTML5 video element if present
     if (vVideo && vConfig.videoUrl) {
       if (vConfig.posterUrl) vVideo.setAttribute('poster', vConfig.posterUrl);
       if (vSource) vSource.setAttribute('src', vConfig.videoUrl);
@@ -458,6 +459,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           window.particleSystem.triggerConfettiBurst(20);
         }
       });
+    }
+
+    // Support Cinematic Video Canvas Engine if present
+    if (window.cinematicVideoEngine && typeof window.cinematicVideoEngine.renderInitialFrame === 'function') {
+      window.cinematicVideoEngine.renderInitialFrame();
     }
   }
 
