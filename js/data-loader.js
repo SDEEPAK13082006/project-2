@@ -11,12 +11,16 @@ class DataLoader {
   async loadData() {
     try {
       const response = await fetch('./data/quiz-data.json');
-      if (!response.ok) throw new Error('Network response failed');
-      this.quizData = await response.json();
+      if (response.ok) {
+        this.quizData = await response.json();
+        if (this.quizData && this.quizData.questions) {
+          return this.quizData;
+        }
+      }
     } catch (err) {
-      console.warn('DataLoader: Fetching JSON directly failed or blocked by CORS. Loading inline fallback data.', err);
-      this.quizData = this.getFallbackData();
+      console.warn('DataLoader: Direct fetch note (CORS / file protocol). Loading complete inline data.', err);
     }
+    this.quizData = this.getFallbackData();
     return this.quizData;
   }
 
@@ -56,11 +60,20 @@ class DataLoader {
         "enableTimer": true,
         "enableAudio": true
       },
+      "musicPlaylist": [
+        {
+          "id": 1,
+          "title": "I Think They Call This Love ❤️",
+          "url": "music.mp3"
+        }
+      ],
       "quotes": [
         "“In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine.” — Maya Angelou",
-        "“You are my today and all of my tomorrows.” — Leo Christopher",
+        "“You will be my today and all of my tomorrows.” — Leo Christopher",
         "“If I know what love is, it is because of you.” — Hermann Hesse",
-        "“Every love story is beautiful, but ours is my absolute favorite.” ❤️"
+        "“I love you not only for what you are, but for what I will become when I am with you.” — Roy Croft",
+        "“Every love story is beautiful, but our future together is my absolute favorite.” ❤️",
+        "“You're the poem I never knew how to write, and our future is the story I will always tell.” 💖"
       ],
       "questions": [
         {
@@ -213,6 +226,15 @@ class DataLoader {
           "You are my favorite hello, my hardest goodbye, my best friend, and my soulmate. I love you infinitely! ❤️"
         ],
         "signature": "Forever Yours,\nYour Devoted Love ❤️"
+      },
+      "videoMessage": {
+        "enabled": true,
+        "badge": "A Special Secret Video Message 🎥",
+        "title": "Watch this only after finishing everything ❤️",
+        "subtitle": "I recorded a special message just for you, from the bottom of my heart.",
+        "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-couple-holding-hands-and-walking-in-a-park-41555-large.mp4",
+        "posterUrl": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1200&q=80",
+        "note": "Tip: You can easily replace this video with your own personal video clip by updating the videoUrl in data/quiz-data.json or dropping your video file into the project! 🎬❤️"
       },
       "gallery": [
         {
