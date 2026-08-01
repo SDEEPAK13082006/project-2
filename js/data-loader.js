@@ -65,143 +65,143 @@ class DataLoader {
       "questions": [
         {
           "id": 1,
-          "question": "Where did our story first begin?",
-          "options": ["At a cozy coffee shop ☕", "Through a late-night message 📱", "At a mutual friend's party 🎉", "Under a rainy street light 🌧️"],
-          "correctIndex": 1,
-          "explanation": "That very first message sparked a flame that has grown brighter every single day. I still reread our early messages with a huge smile! 💕"
+          "question": "Where will our next dream adventure take us?",
+          "options": ["Romantic streets of Paris 🇫🇷", "Overwater bungalow in Maldives 🏝️", "Cozy cabin under Northern Lights 🌌", "Anywhere, as long as we're together! 🗺️"],
+          "correctIndex": 3,
+          "explanation": "The destination will never matter as much as the hand I'll get to hold along the journey! ✈️"
         },
         {
           "id": 2,
-          "question": "What is my absolute favorite thing about you?",
+          "question": "What will be my absolute favorite thing about you forever?",
           "options": ["Your contagious laugh 😄", "Your gentle, warm heart 💖", "The way your eyes light up ✨", "Literally EVERYTHING about you! 🥰"],
           "correctIndex": 3,
-          "explanation": "Trick question! How could I ever choose just one thing? You are my favorite person in every possible way. ❤️"
+          "explanation": "Trick question! How could I ever choose just one? You will always be my favorite person in every way. ❤️"
         },
         {
           "id": 3,
-          "question": "What was the very first movie or show we watched together?",
-          "options": ["A romantic comedy 💕", "An action-packed thriller 🎬", "A silly cartoon 🍿", "A horror movie where we held hands tight 👻"],
+          "question": "What will be our favorite movie genre to watch together on movie nights?",
+          "options": ["Romantic comedies 💕", "Action-packed thrillers 🎬", "Silly animations 🍿", "Horror movies where we hold hands tight 👻"],
           "correctIndex": 0,
-          "explanation": "We spent more time laughing and sharing glances than actually watching the screen! A memory I'll treasure forever. 🍿"
+          "explanation": "We will spend more time laughing and sharing sweet glances than actually watching the screen! 🍿"
         },
         {
           "id": 4,
-          "question": "Which snack or food do we always end up craving together?",
+          "question": "Which snack or food will we always end up craving together late at night?",
           "options": ["Midnight Pizza 🍕", "Sweet Creamy Ice Cream 🍦", "Late-night Ramen 🍜", "Crispy French Fries 🍟"],
           "correctIndex": 1,
-          "explanation": "No matter the hour, sweet creamy ice cream tastes 10x better when shared with you! 🍦"
+          "explanation": "No matter the hour, sweet creamy ice cream will always taste 10x better when shared with you! 🍦"
         },
         {
           "id": 5,
-          "question": "What is my favorite nickname to call you when we're alone?",
+          "question": "What will be my favorite nickname to call you when we're alone?",
           "options": ["My Sunshine ☀️", "Sweetheart 🍯", "My Favorite Human 💖", "Cutie Pie 🥧"],
           "correctIndex": 2,
-          "explanation": "You truly are my favorite human in the entire universe! 🥰"
+          "explanation": "You will always be my favorite human in the entire universe! 🥰"
         },
         {
           "id": 6,
-          "question": "What was our first memorable date like?",
-          "options": ["Walking under evening lights ✨", "Dinner at a quiet restaurant 🕯️", "Picnic in the park 🧺", "Stargazing and deep talks 🌌"],
+          "question": "How will we celebrate our future milestone anniversaries?",
+          "options": ["Walking under evening lights ✨", "Candlelight dinner at a quiet restaurant 🕯️", "Picnic in a flower park 🧺", "Stargazing and deep talks 🌌"],
           "correctIndex": 0,
-          "explanation": "Walking beside you that evening, time felt like it stopped. I knew right then you were someone special. 🌹"
+          "explanation": "Walking beside you under the stars will always make time feel like it stops. 🌹"
         },
         {
           "id": 7,
-          "question": "What song instantly makes me think of you?",
+          "question": "What song will forever make me think of you?",
           "options": ["A soft romantic acoustic ballad 🎵", "An upbeat pop anthem 🎶", "Our official song 💕", "A sweet nostalgic melody 🎹"],
           "correctIndex": 2,
-          "explanation": "Whenever our song plays, my heart skips a beat just like the first day we met! 🎧"
+          "explanation": "Whenever our song plays, my heart will skip a beat just like the very first day! 🎧"
         },
         {
           "id": 8,
-          "question": "What is my favorite memory with you so far?",
-          "options": ["Our spontaneous road trip 🚗", "The quiet rainy day indoors 🌧️", "Our endless deep conversations at 2 AM 🌙", "Every single second spent with you! ❤️"],
+          "question": "What will be our ultimate favorite way to spend a quiet evening?",
+          "options": ["Spontaneous road trips 🚗", "Quiet rainy days indoors 🌧️", "Endless deep conversations at 2 AM 🌙", "Every single second spent with you! ❤️"],
           "correctIndex": 3,
-          "explanation": "Every moment spent with you becomes a prized memory in my heart. 💖"
+          "explanation": "Every future moment spent with you will become a prized memory in my heart. 💖"
         },
         {
           "id": 9,
-          "question": "Who gave in first and confessed their feelings?",
-          "options": ["Me! I couldn't hold it in 💖", "You! With the sweetest words 🥰", "We both said it at the exact same time! ✨", "It was obvious without even speaking 🤫"],
+          "question": "How will we handle silly disagreements in the future?",
+          "options": ["With warm hugs and sweet compromises 💖", "With playful teasing and laughter 😂", "By making delicious peace-offering food 🍳", "By kissing and promising to love each other more 💋"],
           "correctIndex": 0,
-          "explanation": "I couldn't hide how head-over-heels I was for you any longer! Best confession ever. 💘"
+          "explanation": "No matter what comes our way, love and warm hugs will always win! 💘"
         },
         {
           "id": 10,
-          "question": "What is our favorite unspoken ritual when we say goodbye?",
-          "options": ["A tight warm hug that lasts 10 seconds 🫂", "A sweet forehead kiss 💋", "Looking back and waving three times 👋", "Sending a 'get home safe' text immediately 📱"],
+          "question": "What will be our unspoken ritual whenever we say goodbye?",
+          "options": ["A tight 10-second warm hug 🫂", "A sweet forehead kiss 💋", "Looking back and waving three times 👋", "Sending a 'get home safe' text immediately 📱"],
           "correctIndex": 1,
-          "explanation": "A gentle kiss on your forehead carries all my love and protection for you. 💕"
+          "explanation": "A gentle kiss on your forehead will always carry all my love and protection for you. 💕"
         },
         {
           "id": 11,
-          "question": "What is something funny or cute that always makes us laugh?",
-          "options": ["Inside jokes no one else understands 🤫", "Accidental silly mispronunciations 🤣", "Our goofy dancing 💃", "Playful teasing sessions 🤪"],
+          "question": "What will always bring a huge smile to our faces years from now?",
+          "options": ["Inside jokes no one else understands 🤫", "Accidental silly mispronunciations 🤣", "Our goofy dancing in the kitchen 💃", "Playful teasing sessions 🤪"],
           "correctIndex": 0,
-          "explanation": "Our secret inside jokes are the absolute best. We can share a look and burst out laughing! 😂"
+          "explanation": "Our secret inside jokes will keep us laughing together for a lifetime! 😂"
         },
         {
           "id": 12,
-          "question": "If we were trapped on a deserted island, what's the one thing I'd bring?",
+          "question": "If we were stranded on a deserted island in the future, what will I bring?",
           "options": ["A cozy blanket 🛌", "Endless snacks 🍫", "YOU, obviously! 🥰", "A camera to capture memories 📸"],
           "correctIndex": 2,
-          "explanation": "With you by my side, even a deserted island would feel like paradise! 🏝️"
+          "explanation": "With you by my side, even a deserted island will feel like paradise! 🏝️"
         },
         {
           "id": 13,
-          "question": "What weather is our absolute favorite for cuddling?",
+          "question": "What weather will be our absolute favorite for cuddling?",
           "options": ["Rainy afternoon with hot chocolate ☕", "Chilly winter night under warm blankets ❄️", "Breezy autumn sunset 🍂", "Sunny afternoon in a hammock ☀️"],
           "correctIndex": 0,
-          "explanation": "Rain drops on the window, cozy blankets, and warm hugs with you—perfection! 🌧️"
+          "explanation": "Rain drops on the window, cozy blankets, and warm hugs with you will forever be perfection! 🌧️"
         },
         {
           "id": 14,
-          "question": "What is my dream travel destination with you?",
-          "options": ["Romantic streets of Paris 🇫🇷", "Overwater bungalow in Maldives 🏝️", "Cozy cabin under the Northern Lights 🌌", "Anywhere, as long as we're together! 🗺️"],
+          "question": "What will be our dream house goal for the future?",
+          "options": ["A cozy cottage with a big garden 🏡", "A modern penthouse with a city view 🏙️", "A seaside home near the waves 🌊", "Any home, as long as it's filled with your love! ❤️"],
           "correctIndex": 3,
-          "explanation": "The destination doesn't matter nearly as much as the hand I get to hold while traveling there! ✈️"
+          "explanation": "Home won't be a place—home will always be wherever you are! 🏡"
         },
         {
           "id": 15,
-          "question": "What super power would best describe our connection?",
-          "options": ["Mind reading (we finish each other's sentences) 🧠", "Teleportation (wishing we were together instantly) ⚡", "Time travel (making moments last forever) ⌛", "Heart healing (your hug fixes everything) 💓"],
+          "question": "What super power will best describe our future connection?",
+          "options": ["Mind reading (finishing each other's sentences) 🧠", "Teleportation (wishing we were together instantly) ⚡", "Time travel (making moments last forever) ⌛", "Heart healing (your hug fixes everything) 💓"],
           "correctIndex": 3,
-          "explanation": "No matter how tough a day is, one warm embrace from you instantly makes everything alright. 🫂"
+          "explanation": "No matter how tough any day gets, one warm embrace from you will instantly fix everything. 🫂"
         },
         {
           "id": 16,
-          "question": "What do I love doing with you on a lazy Sunday?",
+          "question": "What will we love doing together on lazy Sundays?",
           "options": ["Binging our favorite series 📺", "Cooking a delicious messy meal 🍳", "Sleeping in late & cuddling 🛌", "All of the above! ✨"],
           "correctIndex": 3,
-          "explanation": "Lazy Sundays with you are the purest form of happiness! ☕"
+          "explanation": "Lazy Sundays with you will forever be the purest form of happiness! ☕"
         },
         {
           "id": 17,
-          "question": "What is the sweetest gift or gesture you ever gave me?",
-          "options": ["Your thoughtful words & time 💌", "A meaningful surprise gift 🎁", "A warm embrace when I needed it most 🫂", "Just being your amazing self every day 🌟"],
+          "question": "What will be the greatest gift you will ever give me?",
+          "options": ["Your thoughtful words & time 💌", "Meaningful surprise gifts 🎁", "Warm embraces when I need them most 🫂", "Just being your amazing self every single day 🌟"],
           "correctIndex": 3,
-          "explanation": "Your presence in my life is the greatest gift I could ever ask for. ❤️"
+          "explanation": "Your presence in my life will always be the greatest gift I could ever ask for. ❤️"
         },
         {
           "id": 18,
-          "question": "What do we love doing together late at night?",
-          "options": ["Talking about our big dreams for the future 🌟", "Sharing funny TikToks / memes 📱", "Listening to soft music side by side 🎶", "Stargazing and making wishes 🌌"],
+          "question": "What will we love doing together late at night?",
+          "options": ["Talking about our big dreams for the future 🌟", "Sharing funny memes and laughing 📱", "Listening to soft music side by side 🎶", "Stargazing and making wishes 🌌"],
           "correctIndex": 0,
-          "explanation": "Building our future in conversation under the night sky is my absolute favorite pastime. ✨"
+          "explanation": "Building our future in conversation under the night sky will always be my favorite pastime. ✨"
         },
         {
           "id": 19,
-          "question": "How many times a day do I think about you?",
-          "options": ["About 100 times 💭", "Only when I'm awake ☀️", "Just once... because you never leave my mind! ❤️", "Every single second ⏱️"],
+          "question": "How many times a day will I think about you in the future?",
+          "options": ["About 100 times 💭", "Only when I'm awake ☀️", "Just once... because you will never leave my mind! ❤️", "Every single second ⏱️"],
           "correctIndex": 2,
-          "explanation": "You entered my heart and decided to stay forever. You're always on my mind! 🥰"
+          "explanation": "You will forever stay in my heart. You'll never leave my mind! 🥰"
         },
         {
           "id": 20,
-          "question": "What is my ultimate promise to you?",
-          "options": ["To always make you laugh 😂", "To hold your hand through every storm ⛈️", "To love you more today than yesterday 💕", "To cherish and love you forever & always ❤️"],
+          "question": "What will be my ultimate promise to you for all eternity?",
+          "options": ["To always make you laugh 😂", "To hold your hand through every storm ⛈️", "To love you more tomorrow than today 💕", "To cherish and love you forever & always ❤️"],
           "correctIndex": 3,
-          "explanation": "Forever & always, in every lifetime, my heart belongs to you. ❤️✨"
+          "explanation": "Forever & always, in every lifetime, my heart will belong to you. ❤️✨"
         }
       ],
       "loveLetter": {
