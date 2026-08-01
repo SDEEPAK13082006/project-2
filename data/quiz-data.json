@@ -69,8 +69,8 @@
       "id": 4,
       "question": "Which snack or food do we always end up craving together?",
       "options": ["Midnight Pizza 🍕", "Sweet Creamy Ice Cream 🍦", "Late-night Ramen 🍜", "Crispy French Fries 🍟"],
-      "correctIndex": 0,
-      "explanation": "No matter the hour, midnight pizza tastes 10x better when shared with you! 🍕"
+      "correctIndex": 1,
+      "explanation": "No matter the hour, sweet creamy ice cream tastes 10x better when shared with you! 🍦"
     },
     {
       "id": 5,
