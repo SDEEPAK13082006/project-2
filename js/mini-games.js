@@ -256,29 +256,73 @@ class MiniGamesManager {
     this.activeGame = 'puzzle';
     const grid = document.getElementById('puzzle-grid');
     const movesDisplay = document.getElementById('puzzle-moves-display');
+    const toggleNumBtn = document.getElementById('btn-puzzle-toggle-numbers');
     if (!grid) return;
 
-    grid.innerHTML = '';
+    let showNumbers = false;
+    let selectedImgIdx = 0;
     let moves = 0;
     if (movesDisplay) movesDisplay.innerText = moves;
 
-    // 3x3 Puzzle State (numbers 0..8, where 8 is blank)
+    const puzzleImages = [
+      'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80'
+    ];
+
     let tiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-    // Shuffle tiles (ensure solvable state)
-    function shuffleTiles() {
-      for (let i = tiles.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+    // Always-solvable shuffle: make 40 valid random sliding moves starting from solved state
+    function generateSolvableTiles() {
+      tiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+      let currentBlank = 8;
+      for (let i = 0; i < 40; i++) {
+        const neighbors = [];
+        const r = Math.floor(currentBlank / 3);
+        const c = currentBlank % 3;
+
+        if (r > 0) neighbors.push(currentBlank - 3);
+        if (r < 2) neighbors.push(currentBlank + 3);
+        if (c > 0) neighbors.push(currentBlank - 1);
+        if (c < 2) neighbors.push(currentBlank + 1);
+
+        const chosen = neighbors[Math.floor(Math.random() * neighbors.length)];
+        [tiles[currentBlank], tiles[chosen]] = [tiles[chosen], tiles[currentBlank]];
+        currentBlank = chosen;
       }
     }
 
-    shuffleTiles();
+    generateSolvableTiles();
 
-    const sampleImg = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80';
+    // Setup image selection buttons
+    document.querySelectorAll('.puzzle-img-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        if (window.soundEngine) window.soundEngine.playClickSound();
+        document.querySelectorAll('.puzzle-img-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        selectedImgIdx = parseInt(e.target.dataset.img || '0', 10);
+        moves = 0;
+        if (movesDisplay) movesDisplay.innerText = moves;
+        generateSolvableTiles();
+        renderPuzzle();
+      };
+    });
+
+    if (toggleNumBtn) {
+      toggleNumBtn.onclick = () => {
+        if (window.soundEngine) window.soundEngine.playClickSound();
+        showNumbers = !showNumbers;
+        toggleNumBtn.classList.toggle('btn-secondary', !showNumbers);
+        toggleNumBtn.classList.toggle('btn-danger', showNumbers);
+        renderPuzzle();
+      };
+    }
 
     function renderPuzzle() {
       grid.innerHTML = '';
+      const currentImgUrl = puzzleImages[selectedImgIdx];
+
       tiles.forEach((tileVal, idx) => {
         const tile = document.createElement('div');
         tile.className = 'puzzle-tile';
@@ -291,15 +335,23 @@ class MiniGamesManager {
         } else {
           const row = Math.floor(tileVal / 3);
           const col = tileVal % 3;
-          tile.style.backgroundImage = `url(${sampleImg})`;
+          tile.style.backgroundImage = `url(${currentImgUrl})`;
           tile.style.backgroundSize = '300px 300px';
           tile.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
           tile.style.borderRadius = '12px';
           tile.style.cursor = 'pointer';
-          tile.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+          tile.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)';
+          tile.style.position = 'relative';
+
+          if (showNumbers) {
+            const numBadge = document.createElement('span');
+            numBadge.className = 'badge bg-dark text-light position-absolute top-0 start-0 m-1 rounded-circle opacity-75';
+            numBadge.innerText = tileVal + 1;
+            tile.appendChild(numBadge);
+          }
         }
 
-        tile.addEventListener('click', () => handleTileClick(idx));
+        tile.onclick = () => handleTileClick(idx);
         grid.appendChild(tile);
       });
     }
@@ -327,7 +379,7 @@ class MiniGamesManager {
         if (window.soundEngine) window.soundEngine.playCorrectSound();
         if (window.particleSystem) window.particleSystem.triggerConfettiBurst(50);
         setTimeout(() => {
-          alert(`🧩 PUZZLE SOLVED! 🧩\nYou completed our Love Puzzle in ${moves} moves! Perfectly put together! ❤️`);
+          alert(`🧩 ROMANTIC PUZZLE SOLVED! 🧩\nYou completed our Love Puzzle in ${moves} moves! Every piece of my heart belongs to you! ❤️`);
         }, 300);
       }
     }
