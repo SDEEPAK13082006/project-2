@@ -17,6 +17,13 @@ class SoundEngine {
     this.audioElement.setAttribute('playsinline', 'true');
     this.audioElement.setAttribute('webkit-playsinline', 'true');
 
+    // Dedicated Grand Finale Soft Piano Love BGM
+    this.finaleAudioElement = new Audio('https://assets.mixkit.co/music/preview/mixkit-romantic-sunset-594.mp3');
+    this.finaleAudioElement.loop = true;
+    this.finaleAudioElement.volume = this.volume;
+    this.finaleAudioElement.setAttribute('playsinline', 'true');
+    this.finaleAudioElement.setAttribute('webkit-playsinline', 'true');
+
     // Mobile Audio Unlocking logic
     const unlockMobileAudio = () => {
       this.init();
@@ -71,6 +78,32 @@ class SoundEngine {
     this.audioElement.pause();
   }
 
+  playFinaleBgm() {
+    this.init();
+    if (this.muted) return false;
+
+    this.pauseBgMusic();
+    this.finaleAudioElement.muted = false;
+    this.finaleAudioElement.volume = this.volume;
+    this.finaleAudioElement.currentTime = 0;
+
+    const playPromise = this.finaleAudioElement.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        this.bgMusicPlaying = true;
+      }).catch(err => {
+        console.warn('Finale BGM autoplay waiting for gesture', err);
+      });
+    }
+    return true;
+  }
+
+  stopFinaleBgm() {
+    if (this.finaleAudioElement) {
+      this.finaleAudioElement.pause();
+    }
+  }
+
   toggleSound() {
     this.init();
     this.muted = !this.muted;
@@ -78,6 +111,7 @@ class SoundEngine {
     if (this.muted) {
       this.audioElement.muted = true;
       this.audioElement.pause();
+      if (this.finaleAudioElement) this.finaleAudioElement.pause();
       this.bgMusicPlaying = false;
     } else {
       this.audioElement.muted = false;
@@ -98,6 +132,7 @@ class SoundEngine {
   setVolume(val) {
     this.volume = Math.max(0, Math.min(1, val));
     this.audioElement.volume = this.volume;
+    if (this.finaleAudioElement) this.finaleAudioElement.volume = this.volume;
   }
 
   // Synthesized Sound FX

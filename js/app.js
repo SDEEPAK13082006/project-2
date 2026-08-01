@@ -797,9 +797,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function startGrandFinaleExperience() {
     if (!grandFinaleOverlay) return;
 
-    // Reveal Overlay & Start Music + Fireworks
+    // Reveal Overlay & Start Soft Piano Finale Music + Fireworks
     grandFinaleOverlay.classList.remove('hidden-finale');
-    if (window.soundEngine) window.soundEngine.playBgMusic();
+    if (window.soundEngine) window.soundEngine.playFinaleBgm();
     if (window.particleSystem) window.particleSystem.startFinaleFireworks();
 
     // Reset Box States
@@ -845,7 +845,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (btnCloseFinale) {
     btnCloseFinale.addEventListener('click', () => {
-      if (window.soundEngine) window.soundEngine.playClickSound();
+      if (window.soundEngine) {
+        window.soundEngine.playClickSound();
+        window.soundEngine.stopFinaleBgm();
+        window.soundEngine.playBgMusic();
+      }
       if (window.particleSystem) window.particleSystem.stopFinaleFireworks();
       if (grandFinaleOverlay) grandFinaleOverlay.classList.add('hidden-finale');
     });
