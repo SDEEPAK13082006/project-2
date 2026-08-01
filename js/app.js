@@ -772,4 +772,83 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // --------------------------------------------------------------------------
+  // 12. GRAND FINALE EXPERIENCE ENGINE 👑✨
+  // --------------------------------------------------------------------------
+  const btnTriggerGrandFinale = document.getElementById('btn-trigger-grand-finale');
+  const grandFinaleOverlay = document.getElementById('grand-finale-overlay');
+  const finaleTypewriterBox = document.getElementById('finale-typewriter-box');
+  const finaleTypewriterText = document.getElementById('finale-typewriter-text');
+  const finaleProposalBox = document.getElementById('finale-proposal-box');
+  const btnFinaleYes = document.getElementById('btn-finale-yes');
+  const finaleForeverBox = document.getElementById('finale-forever-box');
+  const finaleCoupleNames = document.getElementById('finale-couple-names');
+  const btnCloseFinale = document.getElementById('btn-close-finale');
+
+  const grandFinaleMessage = "Every page, every quiz, every memory on this website was made for one person... you. Thank you for making my life brighter. I can't promise a perfect life, but I promise to love, respect, and stand by you through every chapter we write together. ❤️";
+
+  if (btnTriggerGrandFinale) {
+    btnTriggerGrandFinale.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClickSound();
+      startGrandFinaleExperience();
+    });
+  }
+
+  function startGrandFinaleExperience() {
+    if (!grandFinaleOverlay) return;
+
+    // Reveal Overlay & Start Music + Fireworks
+    grandFinaleOverlay.classList.remove('hidden-finale');
+    if (window.soundEngine) window.soundEngine.playBgMusic();
+    if (window.particleSystem) window.particleSystem.startFinaleFireworks();
+
+    // Reset Box States
+    if (finaleTypewriterBox) finaleTypewriterBox.classList.remove('d-none');
+    if (finaleProposalBox) finaleProposalBox.classList.add('d-none');
+    if (finaleForeverBox) finaleForeverBox.classList.add('d-none');
+    if (finaleTypewriterText) finaleTypewriterText.innerText = '';
+
+    // Typewriter Text Animation
+    let charIdx = 0;
+    function typeFinaleChar() {
+      if (!grandFinaleOverlay || grandFinaleOverlay.classList.contains('hidden-finale')) return;
+
+      if (charIdx < grandFinaleMessage.length) {
+        if (finaleTypewriterText) finaleTypewriterText.innerText += grandFinaleMessage.charAt(charIdx);
+        charIdx++;
+        setTimeout(typeFinaleChar, 35);
+      } else {
+        // Typewriter Finished -> Reveal Proposal Question Box after 1 second
+        setTimeout(() => {
+          if (finaleProposalBox) finaleProposalBox.classList.remove('d-none');
+        }, 1000);
+      }
+    }
+
+    typeFinaleChar();
+  }
+
+  if (btnFinaleYes) {
+    btnFinaleYes.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playCorrectSound();
+      if (window.particleSystem) window.particleSystem.triggerConfettiBurst(80);
+
+      if (finaleProposalBox) finaleProposalBox.classList.add('d-none');
+      if (finaleTypewriterBox) finaleTypewriterBox.classList.add('d-none');
+
+      if (finaleCoupleNames) {
+        finaleCoupleNames.innerText = `${senderName} & ${partnerNickname}`;
+      }
+      if (finaleForeverBox) finaleForeverBox.classList.remove('d-none');
+    });
+  }
+
+  if (btnCloseFinale) {
+    btnCloseFinale.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClickSound();
+      if (window.particleSystem) window.particleSystem.stopFinaleFireworks();
+      if (grandFinaleOverlay) grandFinaleOverlay.classList.add('hidden-finale');
+    });
+  }
+
 });

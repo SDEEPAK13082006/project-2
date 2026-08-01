@@ -9,6 +9,7 @@ class ParticleSystem {
     this.ctx = this.canvas.getContext('2d');
     this.particles = [];
     this.maxParticles = 35;
+    this.finaleActive = false;
     this.resizeCanvas();
     window.addEventListener('resize', () => this.resizeCanvas());
     this.initFloatingHearts();
@@ -53,28 +54,10 @@ class ParticleSystem {
     this.ctx.beginPath();
     const topCurveHeight = size * 0.3;
     this.ctx.moveTo(0, topCurveHeight);
-    // Left curve
-    this.ctx.bezierCurveTo(
-      0, 0,
-      -size / 2, 0,
-      -size / 2, topCurveHeight
-    );
-    this.ctx.bezierCurveTo(
-      -size / 2, (size + topCurveHeight) / 2,
-      0, size,
-      0, size
-    );
-    // Right curve
-    this.ctx.bezierCurveTo(
-      0, size,
-      size / 2, (size + topCurveHeight) / 2,
-      size / 2, topCurveHeight
-    );
-    this.ctx.bezierCurveTo(
-      size / 2, 0,
-      0, 0,
-      0, topCurveHeight
-    );
+    this.ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurveHeight);
+    this.ctx.bezierCurveTo(-size / 2, (size + topCurveHeight) / 2, 0, size, 0, size);
+    this.ctx.bezierCurveTo(0, size, size / 2, (size + topCurveHeight) / 2, size / 2, topCurveHeight);
+    this.ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurveHeight);
     this.ctx.closePath();
     this.ctx.fill();
     this.ctx.restore();
@@ -99,12 +82,8 @@ class ParticleSystem {
     requestAnimationFrame(() => this.animate());
   }
 
-  // Trigger burst of confetti & hearts on correct answer or quiz complete
+  // Confetti Burst
   triggerConfettiBurst(count = 40) {
-    const colors = ['#ff4081', '#ff80ab', '#e8c5c8', '#d4af37', '#e6e6fa', '#ff4d8d'];
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-
     for (let i = 0; i < count; i++) {
       const el = document.createElement('div');
       el.className = 'confetti-piece';
@@ -129,12 +108,11 @@ class ParticleSystem {
     }
   }
 
-  // Interactive mouse sparkles
   initCursorSparkles() {
     let lastTime = 0;
     window.addEventListener('mousemove', (e) => {
       const now = Date.now();
-      if (now - lastTime < 100) return; // Throttle
+      if (now - lastTime < 100) return;
       lastTime = now;
 
       const sparkle = document.createElement('div');
@@ -150,13 +128,121 @@ class ParticleSystem {
     });
   }
 
-  // Easter Egg Rainbow Storm
   triggerRainbowStorm() {
     for (let i = 0; i < 60; i++) {
       setTimeout(() => {
         this.triggerConfettiBurst(5);
       }, i * 50);
     }
+  }
+
+  // Grand Finale Fireworks System
+  startFinaleFireworks() {
+    const fCanvas = document.getElementById('finale-fireworks-canvas');
+    if (!fCanvas) return;
+    const fCtx = fCanvas.getContext('2d');
+    fCanvas.width = window.innerWidth;
+    fCanvas.height = window.innerHeight;
+
+    let fireworks = [];
+    let particles = [];
+    this.finaleActive = true;
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    class Firework {
+      constructor() {
+        this.x = random(100, fCanvas.width - 100);
+        this.y = fCanvas.height;
+        this.ty = random(50, fCanvas.height / 2);
+        this.speed = random(5, 8);
+        this.hue = random(320, 360);
+      }
+      update(index) {
+        this.y -= this.speed;
+        if (this.y <= this.ty) {
+          createParticles(this.x, this.ty, this.hue);
+          fireworks.splice(index, 1);
+        }
+      }
+      draw() {
+        fCtx.beginPath();
+        fCtx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+        fCtx.fillStyle = `hsl(${this.hue}, 100%, 75%)`;
+        fCtx.fill();
+      }
+    }
+
+    class Particle {
+      constructor(x, y, hue) {
+        this.x = x;
+        this.y = y;
+        this.angle = random(0, Math.PI * 2);
+        this.speed = random(1, 7);
+        this.friction = 0.95;
+        this.gravity = 0.4;
+        this.hue = hue || random(320, 360);
+        this.alpha = 1;
+        this.decay = random(0.015, 0.03);
+      }
+      update(index) {
+        this.speed *= this.friction;
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed + this.gravity;
+        this.alpha -= this.decay;
+        if (this.alpha <= this.decay) {
+          particles.splice(index, 1);
+        }
+      }
+      draw() {
+        fCtx.save();
+        fCtx.globalAlpha = this.alpha;
+        fCtx.fillStyle = `hsl(${this.hue}, 100%, 75%)`;
+        fCtx.font = '14px sans-serif';
+        fCtx.fillText('❤️', this.x, this.y);
+        fCtx.restore();
+      }
+    }
+
+    function createParticles(x, y, hue) {
+      for (let i = 0; i < 25; i++) {
+        particles.push(new Particle(x, y, hue));
+      }
+    }
+
+    const self = this;
+    let timer = 0;
+
+    function loop() {
+      if (!self.finaleActive) return;
+      requestAnimationFrame(loop);
+      fCtx.globalCompositeOperation = 'destination-out';
+      fCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+      fCtx.globalCompositeOperation = 'lighter';
+
+      timer++;
+      if (timer % 20 === 0) {
+        fireworks.push(new Firework());
+      }
+
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        fireworks[i].draw();
+        fireworks[i].update(i);
+      }
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].draw();
+        particles[i].update(i);
+      }
+    }
+
+    loop();
+  }
+
+  stopFinaleFireworks() {
+    this.finaleActive = false;
   }
 }
 
