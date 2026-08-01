@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const savedState = window.dataLoader.getSavedState();
 
   // Set single background song playlist in Sound Engine
-  if (data.musicPlaylist && window.soundEngine) {
+  if (data && data.musicPlaylist && window.soundEngine && typeof window.soundEngine.setPlaylist === 'function') {
     window.soundEngine.setPlaylist(data.musicPlaylist);
   }
 

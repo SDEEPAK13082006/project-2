@@ -8,6 +8,7 @@ class SoundEngine {
     this.muted = false;
     this.volume = 0.85;
     this.bgMusicPlaying = false;
+    this.playlist = [];
 
     // Dedicated background song (music.mp3 - "I Think They Call This Love")
     this.audioElement = new Audio('music.mp3');
@@ -17,7 +18,7 @@ class SoundEngine {
     this.audioElement.setAttribute('webkit-playsinline', 'true');
 
     // Mobile Audio Unlocking logic
-    const unlockMobileAudio = (e) => {
+    const unlockMobileAudio = () => {
       this.init();
       if (!this.bgMusicPlaying && !this.muted) {
         this.playBgMusic();
@@ -27,6 +28,13 @@ class SoundEngine {
     ['click', 'touchstart', 'touchend', 'pointerdown'].forEach(evt => {
       window.addEventListener(evt, unlockMobileAudio, { once: true, passive: true });
     });
+  }
+
+  setPlaylist(list) {
+    this.playlist = list || [];
+    if (Array.isArray(list) && list.length > 0 && list[0].url) {
+      this.audioElement.src = list[0].url;
+    }
   }
 
   init() {
