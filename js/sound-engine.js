@@ -1,5 +1,5 @@
 /* ==========================================================================
-   WEB AUDIO API SOUND SYNTHESIZER & AUDIO MANAGER
+   WEB AUDIO API SYNTHESIZER & 5-SONG PLAYLIST MUSIC MANAGER
    ========================================================================== */
 
 class SoundEngine {
@@ -8,6 +8,22 @@ class SoundEngine {
     this.muted = false;
     this.volume = 0.5;
     this.bgMusicPlaying = false;
+
+    // 5-Song Playlist setup
+    this.playlist = [];
+    this.currentTrackIndex = 0;
+    this.audioElement = new Audio();
+    this.audioElement.volume = this.volume;
+
+    // Auto-advance playlist when current song ends
+    this.audioElement.addEventListener('ended', () => {
+      this.playNextTrack();
+    });
+
+    this.audioElement.addEventListener('error', (e) => {
+      console.warn('Audio playlist track error, trying next track or synth fallback...', e);
+      this.playNextTrack();
+    });
   }
 
   init() {
@@ -22,14 +38,143 @@ class SoundEngine {
     }
   }
 
-  // Play a synthesized chime for correct answer
+  setPlaylist(songsArray) {
+    if (Array.isArray(songsArray) && songsArray.length > 0) {
+      this.playlist = songsArray;
+    }
+  }
+
+  getCurrentTrack() {
+    if (!this.playlist || this.playlist.length === 0) return null;
+    return this.playlist[this.currentTrackIndex];
+  }
+
+  toggleAmbientBgMusic() {
+    this.init();
+
+    if (this.bgMusicPlaying) {
+      this.pauseBgMusic();
+      return false;
+    } else {
+      return this.playBgMusic();
+    }
+  }
+
+  playBgMusic() {
+    if (this.playlist && this.playlist.length > 0) {
+      const track = this.getCurrentTrack();
+      if (track && track.url) {
+        this.audioElement.src = track.url;
+        this.audioElement.volume = this.volume;
+        this.audioElement.play().then(() => {
+          this.bgMusicPlaying = true;
+          this.showTrackToast(track.title);
+        }).catch(err => {
+          console.warn('HTML5 Audio autoplay restricted. Falling back to Web Audio synth.', err);
+          this.playSynthBgMusic();
+        });
+        return true;
+      }
+    }
+
+    // Fallback Web Audio Synth
+    return this.playSynthBgMusic();
+  }
+
+  playNextTrack() {
+    if (!this.playlist || this.playlist.length === 0) return;
+    this.currentTrackIndex = (this.currentTrackIndex + 1) % this.playlist.length;
+    if (this.bgMusicPlaying) {
+      this.playBgMusic();
+    }
+  }
+
+  playPreviousTrack() {
+    if (!this.playlist || this.playlist.length === 0) return;
+    this.currentTrackIndex = (this.currentTrackIndex - 1 + this.playlist.length) % this.playlist.length;
+    if (this.bgMusicPlaying) {
+      this.playBgMusic();
+    }
+  }
+
+  pauseBgMusic() {
+    this.bgMusicPlaying = false;
+    this.audioElement.pause();
+    if (this.bgMusicTimer) clearInterval(this.bgMusicTimer);
+  }
+
+  showTrackToast(title) {
+    const existing = document.getElementById('music-track-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'music-track-toast';
+    toast.className = 'glass-card text-center p-2 position-fixed shadow-lg';
+    toast.style.top = '70px';
+    toast.style.right = '20px';
+    toast.style.zIndex = '9999';
+    toast.style.borderRadius = '30px';
+    toast.style.fontSize = '0.9rem';
+    toast.innerHTML = `<span class="text-accent fw-bold"><i class="fa-solid fa-music me-1"></i> Now Playing:</span> ${title || 'Romantic Melody'}`;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 3500);
+  }
+
+  // Synthesized chord loop fallback
+  playSynthBgMusic() {
+    if (!this.audioCtx) return false;
+    this.bgMusicPlaying = true;
+    const chords = [
+      [261.63, 329.63, 392.00, 493.88], // C maj7
+      [220.00, 261.63, 329.63, 392.00], // A min7
+      [174.61, 220.00, 261.63, 329.63], // F maj7
+      [196.00, 246.94, 293.66, 349.23]  // G7
+    ];
+    let chordIndex = 0;
+
+    const playChord = () => {
+      if (!this.bgMusicPlaying || this.muted) return;
+      const now = this.audioCtx.currentTime;
+      const currentChord = chords[chordIndex];
+      
+      currentChord.forEach((freq) => {
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.02 * this.volume, now + 1.5);
+        gain.gain.linearRampToValueAtTime(0.001, now + 3.8);
+
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 4.0);
+      });
+
+      chordIndex = (chordIndex + 1) % chords.length;
+    };
+
+    playChord();
+    this.bgMusicTimer = setInterval(playChord, 4000);
+    return true;
+  }
+
+  // Sound FX Synthesizers
   playCorrectSound() {
     if (this.muted) return;
     this.init();
     if (!this.audioCtx) return;
 
     const now = this.audioCtx.currentTime;
-    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 arpeggio
+    const notes = [523.25, 659.25, 783.99, 1046.50];
 
     notes.forEach((freq, index) => {
       const osc = this.audioCtx.createOscillator();
@@ -50,14 +195,13 @@ class SoundEngine {
     });
   }
 
-  // Play a soft encouraging bell sound for incorrect answer
   playIncorrectSound() {
     if (this.muted) return;
     this.init();
     if (!this.audioCtx) return;
 
     const now = this.audioCtx.currentTime;
-    const notes = [440, 415.30]; // A4 to Ab4 soft transition
+    const notes = [440, 415.30];
 
     notes.forEach((freq, index) => {
       const osc = this.audioCtx.createOscillator();
@@ -78,7 +222,6 @@ class SoundEngine {
     });
   }
 
-  // Play soft tactile click sound
   playClickSound() {
     if (this.muted) return;
     this.init();
@@ -102,7 +245,6 @@ class SoundEngine {
     osc.stop(now + 0.06);
   }
 
-  // Play heart pop sound for Easter egg or heart click
   playHeartPopSound() {
     if (this.muted) return;
     this.init();
@@ -126,63 +268,14 @@ class SoundEngine {
     osc.stop(now + 0.13);
   }
 
-  // Soft ambient music loop generator using Web Audio API synthesis
-  toggleAmbientBgMusic() {
-    this.init();
-    if (!this.audioCtx) return;
-
-    if (this.bgMusicPlaying) {
-      if (this.bgMusicTimer) clearInterval(this.bgMusicTimer);
-      this.bgMusicPlaying = false;
-      return false;
-    } else {
-      this.bgMusicPlaying = true;
-      const chords = [
-        [261.63, 329.63, 392.00, 493.88], // C maj7
-        [220.00, 261.63, 329.63, 392.00], // A min7
-        [174.61, 220.00, 261.63, 329.63], // F maj7
-        [196.00, 246.94, 293.66, 349.23]  // G7
-      ];
-      let chordIndex = 0;
-
-      const playChord = () => {
-        if (!this.bgMusicPlaying || this.muted) return;
-        const now = this.audioCtx.currentTime;
-        const currentChord = chords[chordIndex];
-        
-        currentChord.forEach((freq) => {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now);
-
-          gain.gain.setValueAtTime(0.001, now);
-          gain.gain.linearRampToValueAtTime(0.02 * this.volume, now + 1.5);
-          gain.gain.linearRampToValueAtTime(0.001, now + 3.8);
-
-          osc.connect(gain);
-          gain.connect(this.audioCtx.destination);
-
-          osc.start(now);
-          osc.stop(now + 4.0);
-        });
-
-        chordIndex = (chordIndex + 1) % chords.length;
-      };
-
-      playChord();
-      this.bgMusicTimer = setInterval(playChord, 4000);
-      return true;
-    }
-  }
-
   setVolume(val) {
     this.volume = Math.max(0, Math.min(1, val));
+    this.audioElement.volume = this.volume;
   }
 
   toggleMute() {
     this.muted = !this.muted;
+    this.audioElement.muted = this.muted;
     return this.muted;
   }
 }

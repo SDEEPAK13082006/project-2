@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const data = await window.dataLoader.loadData();
   const savedState = window.dataLoader.getSavedState();
 
+  // Set 5-song playlist in Sound Engine
+  if (data.musicPlaylist && window.soundEngine) {
+    window.soundEngine.setPlaylist(data.musicPlaylist);
+  }
+
   // Parse URL Parameters (for received share links: ?to=Sweetheart&from=YourLove&video=...)
   const urlParams = new URLSearchParams(window.location.search);
   const paramTo = urlParams.get('to');
