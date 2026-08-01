@@ -36,10 +36,15 @@
   <!-- TOP NAVIGATION CONTROLS -->
   <header class="top-navbar">
     <div class="container d-flex justify-content-between align-items-center">
-      <div class="brand-logo font-heading text-accent fw-bold fs-4">
+      <div class="brand-logo font-heading text-accent fw-bold fs-4 cursor-pointer" id="nav-brand-logo">
         Our Love Quiz <span class="heart-pulse-icon fs-5 align-middle ms-1">❤️</span>
       </div>
       <div class="nav-controls">
+        <!-- Mini Games Hub Button -->
+        <button id="btn-nav-games" class="icon-btn text-warning" title="Romantic Mini-Games Arcade 🎮" aria-label="Mini Games">
+          <i class="fa-solid fa-gamepad"></i>
+        </button>
+
         <!-- Share Link Generator Modal Button -->
         <button id="btn-open-share-modal" class="icon-btn text-accent" title="Generate Shareable Partner Link 💌" aria-label="Share Link">
           <i class="fa-solid fa-paper-plane"></i>
@@ -102,8 +107,8 @@
               <button id="btn-start-journey" class="btn-romantic btn-lg">
                 Start Our Journey <i class="fa-solid fa-sparkles ms-1"></i>
               </button>
-              <button id="btn-hero-share" class="btn-outline-romantic btn-lg">
-                Send To My Love 💌
+              <button id="btn-hero-games" class="btn-outline-romantic btn-lg">
+                Mini Games 🎮
               </button>
             </div>
 
@@ -357,6 +362,120 @@
       </div>
     </section>
 
+    <!-- ==========================================
+         VIEW 5: ROMANTIC MINI-GAMES ARCADE 🎮❤️
+         ========================================== -->
+    <section id="view-games" class="view-section hidden-view">
+      <div class="w-100">
+        
+        <!-- Games Selector Hub -->
+        <div id="games-hub-selector" class="glass-card text-center p-4 p-md-5 mb-4">
+          <span class="fs-1">🎮</span>
+          <h2 class="font-heading fs-1 text-accent mb-2">Romantic Mini-Games Arcade</h2>
+          <p class="text-muted fs-5 mb-4">Choose a game to play and share sweet moments together!</p>
+
+          <div class="row g-4">
+            <!-- Game 1: Catch the Hearts -->
+            <div class="col-12 col-md-6">
+              <div id="select-game-catch" class="game-card-btn h-100">
+                <div class="fs-1 mb-2">🧺❤️</div>
+                <h3 class="font-heading fs-3 text-accent">Catch the Hearts</h3>
+                <p class="text-muted small">Move your basket to catch falling hearts before time runs out!</p>
+                <button class="btn-romantic btn-sm mt-2">Play Game <i class="fa-solid fa-play ms-1"></i></button>
+              </div>
+            </div>
+
+            <!-- Game 2: Find the Hidden Heart -->
+            <div class="col-12 col-md-6">
+              <div id="select-game-find" class="game-card-btn h-100">
+                <div class="fs-1 mb-2">🔍✨</div>
+                <h3 class="font-heading fs-3 text-accent">Find the Hidden Heart</h3>
+                <p class="text-muted small">Flip mystery cards to discover the glowing Golden Heart!</p>
+                <button class="btn-romantic btn-sm mt-2">Play Game <i class="fa-solid fa-play ms-1"></i></button>
+              </div>
+            </div>
+
+            <!-- Game 3: Love Puzzle -->
+            <div class="col-12 col-md-6">
+              <div id="select-game-puzzle" class="game-card-btn h-100">
+                <div class="fs-1 mb-2">🧩💖</div>
+                <h3 class="font-heading fs-3 text-accent">Love Puzzle</h3>
+                <p class="text-muted small">Slide tiles to reconstruct our romantic memory image!</p>
+                <button class="btn-romantic btn-sm mt-2">Play Game <i class="fa-solid fa-play ms-1"></i></button>
+              </div>
+            </div>
+
+            <!-- Game 4: Pop the Balloons -->
+            <div class="col-12 col-md-6">
+              <div id="select-game-balloons" class="game-card-btn h-100">
+                <div class="fs-1 mb-2">🎈🎉</div>
+                <h3 class="font-heading fs-3 text-accent">Pop the Balloons</h3>
+                <p class="text-muted small">Tap floating heart balloons to pop them and unlock love notes!</p>
+                <button class="btn-romantic btn-sm mt-2">Play Game <i class="fa-solid fa-play ms-1"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAME ARENA 1: CATCH THE HEARTS -->
+        <div id="game-arena-catch" class="glass-card text-center d-none">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn-back-to-hub btn btn-outline-danger btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i> Back to Games</button>
+            <h4 class="font-heading text-accent mb-0">Catch the Hearts ❤️</h4>
+            <div class="badge bg-danger fs-6">Score: <span id="catch-score-display">0</span> | Time: <span id="catch-timer-display">30</span>s</div>
+          </div>
+          <p class="text-muted small mb-3">Move your mouse, touch drag, or use Left/Right arrow keys to catch hearts!</p>
+          
+          <div class="catch-canvas-wrapper mx-auto">
+            <canvas id="catch-hearts-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- GAME ARENA 2: FIND THE HIDDEN HEART -->
+        <div id="game-arena-find" class="glass-card text-center d-none">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn-back-to-hub btn btn-outline-danger btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i> Back to Games</button>
+            <h4 class="font-heading text-accent mb-0">Find the Hidden Heart 🔍</h4>
+            <div class="badge bg-danger fs-6">Found: <span id="find-score-display">0 / 3</span> | Tries: <span id="find-attempts-display">0</span></div>
+          </div>
+          <p class="text-muted small mb-3">Tap mystery boxes to find all 3 secret golden hearts!</p>
+
+          <div id="find-heart-grid" class="row g-3 justify-content-center max-w-600 mx-auto">
+            <!-- Cards rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- GAME ARENA 3: LOVE PUZZLE -->
+        <div id="game-arena-puzzle" class="glass-card text-center d-none">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn-back-to-hub btn btn-outline-danger btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i> Back to Games</button>
+            <h4 class="font-heading text-accent mb-0">Love Puzzle 🧩</h4>
+            <div class="badge bg-danger fs-6">Moves: <span id="puzzle-moves-display">0</span></div>
+          </div>
+          <p class="text-muted small mb-3">Tap adjacent tiles to swap them into the blank space and solve the picture!</p>
+
+          <div id="puzzle-grid" class="puzzle-grid-wrapper mb-3">
+            <!-- 3x3 tiles rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- GAME ARENA 4: POP THE BALLOONS -->
+        <div id="game-arena-balloons" class="glass-card text-center d-none">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn-back-to-hub btn btn-outline-danger btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i> Back to Games</button>
+            <h4 class="font-heading text-accent mb-0">Pop the Balloons 🎈</h4>
+            <div class="badge bg-danger fs-6">Score: <span id="balloons-score-display">0</span> | Time: <span id="balloons-timer-display">25</span>s</div>
+          </div>
+          <p class="text-muted small mb-3">Tap floating balloons before they fly away!</p>
+
+          <div id="balloons-arena" class="balloons-arena-wrapper position-relative">
+            <!-- Balloons floating upwards dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <!-- ==========================================
@@ -481,6 +600,7 @@
   <script src="js/certificate.js"></script>
   <script src="js/data-loader.js"></script>
   <script src="js/quiz-engine.js"></script>
+  <script src="js/mini-games.js"></script>
   <script src="js/app.js"></script>
 
 </body>

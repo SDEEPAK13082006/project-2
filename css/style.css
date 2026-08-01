@@ -749,16 +749,130 @@ h1, h2, h3, h4, .font-heading {
   background: rgba(40, 20, 50, 0.8);
 }
 
-/* Romantic Video Frame */
-.romantic-video-frame {
-  max-width: 800px;
+/* ==========================================================================
+   MINI-GAMES ARCADE STYLES 🎮❤️
+   ========================================================================== */
+
+.game-card-btn {
+  background: var(--card-bg);
+  border: 2px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+}
+
+.game-card-btn:hover {
+  transform: translateY(-8px) scale(1.03);
+  border-color: var(--primary-rose);
+  box-shadow: 0 15px 30px rgba(255, 64, 129, 0.3);
+  background: var(--card-hover);
+}
+
+/* Game 1: Catch the Hearts Canvas */
+.catch-canvas-wrapper {
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 20px;
-  padding: 8px;
-  background: var(--rose-gold-gradient);
-  border: 3px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 15px 35px rgba(216, 27, 96, 0.3);
+  border: 2px solid var(--glass-border);
+  overflow: hidden;
   position: relative;
-  transition: var(--transition-smooth);
+}
+
+/* Game 3: Love Puzzle Grid */
+.puzzle-grid-wrapper {
+  width: 308px;
+  height: 308px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 4px;
+  border-radius: 16px;
+  border: 2px solid var(--glass-border);
+  margin: 0 auto;
+}
+
+.puzzle-tile {
+  width: 98px;
+  height: 98px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Game 4: Pop the Balloons Arena */
+.balloons-arena-wrapper {
+  height: 400px;
+  background: rgba(255, 240, 245, 0.4);
+  border-radius: 20px;
+  border: 2px solid var(--glass-border);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="night"] .balloons-arena-wrapper {
+  background: rgba(30, 15, 45, 0.5);
+}
+
+.heart-balloon {
+  position: absolute;
+  bottom: -60px;
+  width: 55px;
+  height: 65px;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: inset -5px -5px 10px rgba(0,0,0,0.15), 0 8px 20px rgba(255, 64, 129, 0.3);
+  animation: floatUpBalloon 5s linear forwards;
+}
+
+.heart-balloon::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  width: 2px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  transform: translateX(-50%);
+}
+
+@keyframes floatUpBalloon {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-500px) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+/* Pop float text indicator */
+.pop-float-text {
+  position: fixed;
+  pointer-events: none;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--primary-rose);
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  animation: floatUpFade 0.8s ease-out forwards;
+}
+
+@keyframes floatUpFade {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -100px) scale(1.2);
+    opacity: 0;
+  }
 }
 
 .romantic-video-frame:hover {

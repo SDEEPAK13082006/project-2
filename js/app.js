@@ -37,23 +37,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     hero: document.getElementById('view-hero'),
     quiz: document.getElementById('view-quiz'),
     results: document.getElementById('view-results'),
-    story: document.getElementById('view-story')
+    story: document.getElementById('view-story'),
+    games: document.getElementById('view-games')
   };
 
   const nicknameInput = document.getElementById('input-partner-nickname');
   const heroNicknameDisplay = document.getElementById('hero-nickname-display');
+  const navBrandLogo = document.getElementById('nav-brand-logo');
   
   // Top Nav Buttons
   const btnToggleTheme = document.getElementById('btn-toggle-theme');
   const btnToggleAudio = document.getElementById('btn-toggle-audio');
   const btnToggleSound = document.getElementById('btn-toggle-sound');
   const btnRestartQuiz = document.getElementById('btn-restart-quiz');
+  const btnNavGames = document.getElementById('btn-nav-games');
   const btnOpenShareModal = document.getElementById('btn-open-share-modal');
   const btnOpenSubmissionsModal = document.getElementById('btn-open-submissions-modal');
 
   // Hero Controls
   const btnStartJourney = document.getElementById('btn-start-journey');
-  const btnHeroShare = document.getElementById('btn-hero-share');
+  const btnHeroGames = document.getElementById('btn-hero-games');
   const heroHeartMascot = document.getElementById('hero-heart-mascot');
 
   // Quiz Controls & Elements
@@ -98,6 +101,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Submissions Modal Container
   const submissionsListContainer = document.getElementById('submissions-list-container');
 
+  // Games Hub References
+  const gamesHubSelector = document.getElementById('games-hub-selector');
+  const gameArenaCatch = document.getElementById('game-arena-catch');
+  const gameArenaFind = document.getElementById('game-arena-find');
+  const gameArenaPuzzle = document.getElementById('game-arena-puzzle');
+  const gameArenaBalloons = document.getElementById('game-arena-balloons');
+
   // --------------------------------------------------------------------------
   // 2. THEME & INITIALIZATION
   // --------------------------------------------------------------------------
@@ -111,7 +121,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   applyTheme(currentTheme);
 
-  // Restore Nickname
   if (paramTo) {
     partnerNickname = paramTo;
   } else if (savedState && savedState.partnerNickname) {
@@ -141,6 +150,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 3. NAVIGATION VIEW SWITCHER
   // --------------------------------------------------------------------------
   function showView(viewId) {
+    // Stop active mini-games when leaving games view
+    if (viewId !== 'view-games' && window.miniGamesManager) {
+      window.miniGamesManager.stopAllGames();
+    }
+
     Object.keys(views).forEach(key => {
       if (views[key]) {
         if (key === viewId.replace('view-', '')) {
@@ -153,6 +167,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  if (navBrandLogo) {
+    navBrandLogo.addEventListener('click', () => {
+      window.soundEngine.playClickSound();
+      showView('view-hero');
+    });
+  }
+
   // --------------------------------------------------------------------------
   // 4. HERO SECTION LOGIC & EASTER EGGS
   // --------------------------------------------------------------------------
@@ -162,11 +183,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadQuestionView();
   });
 
-  if (btnHeroShare) {
-    btnHeroShare.addEventListener('click', () => {
+  if (btnHeroGames) {
+    btnHeroGames.addEventListener('click', () => {
       window.soundEngine.playClickSound();
-      const modal = new bootstrap.Modal(document.getElementById('shareLinkModal'));
-      modal.show();
+      showView('view-games');
+      openGamesHub();
+    });
+  }
+
+  if (btnNavGames) {
+    btnNavGames.addEventListener('click', () => {
+      window.soundEngine.playClickSound();
+      showView('view-games');
+      openGamesHub();
     });
   }
 
@@ -195,21 +224,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // Reset UI states
     quizExplanationBox.classList.add('d-none');
     quizQuoteInterstitial.classList.add('d-none');
     quizNextContainer.classList.add('d-none');
     quizOptionsContainer.innerHTML = '';
 
-    // Update Counter & Progress
     quizCounter.innerText = `Question ${currentIdx + 1} of ${total}`;
     const progressPct = ((currentIdx) / total) * 100;
     quizProgressBar.style.width = `${progressPct}%`;
 
-    // Render Question Text
     quizQuestionText.innerText = q.question;
 
-    // Render Options
     q.options.forEach((optText, idx) => {
       const optBtn = document.createElement('div');
       optBtn.className = 'option-card';
@@ -221,16 +246,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       quizOptionsContainer.appendChild(optBtn);
     });
 
-    // Start Timer (if enabled)
     if (data.config.enableTimer) {
       quizTimerBadge.classList.remove('d-none');
       window.quizEngine.startTimer(
-        (sec) => {
-          timerSeconds.innerText = sec;
-        },
-        () => {
-          handleAnswerSelection(-1);
-        }
+        (sec) => { timerSeconds.innerText = sec; },
+        () => { handleAnswerSelection(-1); }
       );
     } else {
       quizTimerBadge.classList.add('d-none');
@@ -256,7 +276,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
-    // Audio & Particle Feedback
     if (result.isCorrect) {
       window.soundEngine.playCorrectSound();
       window.particleSystem.triggerConfettiBurst(35);
@@ -266,17 +285,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       explanationHeader.innerHTML = `<span class="text-danger"><i class="fa-solid fa-heart-crack"></i> Almost! But I Still Love You 💕</span>`;
     }
 
-    // Show Explanation
     explanationText.innerText = result.explanation;
     quizExplanationBox.classList.remove('d-none');
 
-    // Show Quote Interstitial (every 3 questions)
     if (window.quizEngine.currentIndex % 3 === 0) {
       quoteText.innerText = window.quizEngine.getRandomQuote();
       quizQuoteInterstitial.classList.remove('d-none');
     }
 
-    // Show Next Button
     quizNextContainer.classList.remove('d-none');
   }
 
@@ -292,7 +308,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // --------------------------------------------------------------------------
-  // 6. RESULTS, CERTIFICATE & BACKEND SUBMISSION
+  // 6. RESULTS & CERTIFICATE
   // --------------------------------------------------------------------------
   function renderResultsView() {
     showView('view-results');
@@ -306,7 +322,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     resultScoreNum.innerText = score;
     resultTierMessage.innerText = `“${tierMsg}”`;
 
-    // Animate Circular Progress
     const ratio = score / total;
     const offset = 440 - (440 * ratio);
     setTimeout(() => {
@@ -315,7 +330,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }, 200);
 
-    // Submit Result to Backend API
     submitResultToBackend(partnerNickname, senderName, score, total, tierMsg, window.quizEngine.userAnswers);
   }
 
@@ -331,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (backendStatusBadge) backendStatusBadge.classList.remove('d-none');
       }
     } catch (err) {
-      console.warn('Backend API submission note: Running in static client-side mode or offline.', err);
+      console.warn('Backend API submission note: Running in static mode.', err);
     }
   }
 
@@ -350,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // --------------------------------------------------------------------------
-  // 7. FINAL SURPRISE & LOVE STORY PAGE LOGIC
+  // 7. LOVE STORY PAGE LOGIC
   // --------------------------------------------------------------------------
   function renderLoveStoryPage() {
     renderTypewriterLetter();
@@ -360,7 +374,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderVideoSection();
   }
 
-  // Personal Video Message Renderer & Audio Handler
   function renderVideoSection() {
     const vSec = document.getElementById('video-message-section');
     const vConfig = data.videoMessage;
@@ -387,7 +400,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (vSource) vSource.setAttribute('src', vConfig.videoUrl);
       vVideo.load();
 
-      // Pause ambient background music when user plays personal video
       vVideo.addEventListener('play', () => {
         if (window.soundEngine && window.soundEngine.bgMusicPlaying) {
           window.soundEngine.toggleAmbientBgMusic();
@@ -399,7 +411,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Typewriter Love Letter Effect
   function renderTypewriterLetter() {
     if (!letterBody) return;
     letterBody.innerHTML = '';
@@ -423,7 +434,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     typeChar();
   }
 
-  // Memory Gallery
   function renderGallery(filter = 'all') {
     if (!galleryGrid) return;
     galleryGrid.innerHTML = '';
@@ -460,7 +470,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Gallery Filters
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       window.soundEngine.playClickSound();
@@ -470,13 +479,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // Milestone Timeline
   function renderTimeline() {
     if (!timelineContainer) return;
     timelineContainer.innerHTML = '';
 
     const milestones = data.timeline || [];
-    milestones.forEach((item, idx) => {
+    milestones.forEach((item) => {
       const tItem = document.createElement('div');
       tItem.className = 'timeline-item';
       tItem.innerHTML = `
@@ -491,7 +499,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Live Countdown Timer
   function initCountdownTimer() {
     const cdDays = document.getElementById('cd-days');
     const cdHours = document.getElementById('cd-hours');
@@ -523,7 +530,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     setInterval(updateCd, 1000);
   }
 
-  // Secret "Open My Heart ❤️" Button Modal
   btnOpenMyHeart.addEventListener('click', () => {
     window.soundEngine.playHeartPopSound();
     window.particleSystem.triggerConfettiBurst(40);
@@ -535,7 +541,70 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // --------------------------------------------------------------------------
-  // 8. SHARE LINK GENERATOR LOGIC
+  // 8. ROMANTIC MINI-GAMES ARCADE CONTROLLER 🎮❤️
+  // --------------------------------------------------------------------------
+  function openGamesHub() {
+    if (window.miniGamesManager) window.miniGamesManager.stopAllGames();
+    if (gamesHubSelector) gamesHubSelector.classList.remove('d-none');
+    if (gameArenaCatch) gameArenaCatch.classList.add('d-none');
+    if (gameArenaFind) gameArenaFind.classList.add('d-none');
+    if (gameArenaPuzzle) gameArenaPuzzle.classList.add('d-none');
+    if (gameArenaBalloons) gameArenaBalloons.classList.add('d-none');
+  }
+
+  function hideHubShowArena(arenaElem) {
+    if (gamesHubSelector) gamesHubSelector.classList.add('d-none');
+    if (arenaElem) arenaElem.classList.remove('d-none');
+  }
+
+  // Bind Mini Games Selection Cards
+  const selectCatch = document.getElementById('select-game-catch');
+  const selectFind = document.getElementById('select-game-find');
+  const selectPuzzle = document.getElementById('select-game-puzzle');
+  const selectBalloons = document.getElementById('select-game-balloons');
+
+  if (selectCatch) {
+    selectCatch.addEventListener('click', () => {
+      window.soundEngine.playClickSound();
+      hideHubShowArena(gameArenaCatch);
+      if (window.miniGamesManager) window.miniGamesManager.initCatchTheHearts();
+    });
+  }
+
+  if (selectFind) {
+    selectFind.addEventListener('click', () => {
+      window.soundEngine.playClickSound();
+      hideHubShowArena(gameArenaFind);
+      if (window.miniGamesManager) window.miniGamesManager.initFindHiddenHeart();
+    });
+  }
+
+  if (selectPuzzle) {
+    selectPuzzle.addEventListener('click', () => {
+      window.soundEngine.playClickSound();
+      hideHubShowArena(gameArenaPuzzle);
+      if (window.miniGamesManager) window.miniGamesManager.initLovePuzzle();
+    });
+  }
+
+  if (selectBalloons) {
+    selectBalloons.addEventListener('click', () => {
+      window.soundEngine.playClickSound();
+      hideHubShowArena(gameArenaBalloons);
+      if (window.miniGamesManager) window.miniGamesManager.initPopTheBalloons();
+    });
+  }
+
+  // Back to Hub Buttons
+  document.querySelectorAll('.btn-back-to-hub').forEach(btn => {
+    btn.addEventListener('click', () => {
+      window.soundEngine.playClickSound();
+      openGamesHub();
+    });
+  });
+
+  // --------------------------------------------------------------------------
+  // 9. SHARE LINK GENERATOR LOGIC
   // --------------------------------------------------------------------------
   function updateShareUrlPreview() {
     const baseUrl = window.location.origin + window.location.pathname;
@@ -552,8 +621,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     if (generatedShareUrl) generatedShareUrl.value = fullShareUrl;
 
-    // Social Share Links
-    const encodedText = encodeURIComponent(`Hey ${toVal}! ❤️ I created a special romantic quiz just for you: "Our Love Quiz ❤️". Take it here:`);
+    const encodedText = encodeURIComponent(`Hey ${toVal}! ❤️ I created a special romantic quiz & mini-games for you: "Our Love Quiz ❤️". Take it here:`);
     const encodedUrl = encodeURIComponent(fullShareUrl);
 
     if (btnWhatsappShare) {
@@ -592,7 +660,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // --------------------------------------------------------------------------
-  // 9. SUBMISSIONS MODAL LOGIC (Creator View)
+  // 10. SUBMISSIONS MODAL LOGIC (Creator View)
   // --------------------------------------------------------------------------
   if (btnOpenSubmissionsModal) {
     btnOpenSubmissionsModal.addEventListener('click', async () => {
@@ -610,7 +678,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const resData = await response.json();
           renderSubmissionsList(resData.data || []);
         } else {
-          submissionsListContainer.innerHTML = '<div class="alert alert-warning">No backend API connected. Submissions are saved when running Express server!</div>';
+          submissionsListContainer.innerHTML = '<div class="alert alert-warning">No backend API connected. Submissions are saved when running Express/Node server!</div>';
         }
       } catch (err) {
         submissionsListContainer.innerHTML = `
@@ -648,7 +716,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // --------------------------------------------------------------------------
-  // 10. NAVBAR CONTROLS
+  // 11. NAVBAR CONTROLS
   // --------------------------------------------------------------------------
   btnToggleTheme.addEventListener('click', () => {
     window.soundEngine.playClickSound();
