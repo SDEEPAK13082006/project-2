@@ -262,6 +262,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --------------------------------------------------------------------------
   // 5. QUIZ ENGINE VIEW & LOGIC
   // --------------------------------------------------------------------------
+  const btnExitQuiz = document.getElementById('btn-exit-quiz');
+
+  if (btnExitQuiz) {
+    btnExitQuiz.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClickSound();
+      if (window.quizEngine) window.quizEngine.clearTimer();
+      showView('view-hero');
+    });
+  }
+
   function loadQuestionView() {
     const q = window.quizEngine.getCurrentQuestion();
     const total = window.quizEngine.getTotalQuestions();
