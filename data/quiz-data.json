@@ -11,28 +11,8 @@
   "musicPlaylist": [
     {
       "id": 1,
-      "title": "Romantic Sunset 🌅",
-      "url": "https://assets.mixkit.co/music/preview/mixkit-romantic-sunset-594.mp3"
-    },
-    {
-      "id": 2,
-      "title": "Sweet Love Serenade 💕",
-      "url": "https://assets.mixkit.co/music/preview/mixkit-sweet-love-592.mp3"
-    },
-    {
-      "id": 3,
-      "title": "Gentle Piano Dreams 🎹",
-      "url": "https://assets.mixkit.co/music/preview/mixkit-a-very-happy-interest-157.mp3"
-    },
-    {
-      "id": 4,
-      "title": "Serene Acoustic View 🎸",
-      "url": "https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3"
-    },
-    {
-      "id": 5,
-      "title": "Endless Beautiful Romance 💖",
-      "url": "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"
+      "title": "I Think They Call This Love ❤️",
+      "url": "music.mp3"
     }
   ],
   "quotes": [

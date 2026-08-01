@@ -66,6 +66,7 @@ class SoundEngine {
       if (track && track.url) {
         this.audioElement.src = track.url;
         this.audioElement.volume = this.volume;
+        this.audioElement.loop = (this.playlist.length === 1);
         this.audioElement.play().then(() => {
           this.bgMusicPlaying = true;
           this.showTrackToast(track.title);
