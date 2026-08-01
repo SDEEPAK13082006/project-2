@@ -1,29 +1,30 @@
 /* ==========================================================================
-   WEB AUDIO API SYNTHESIZER & 5-SONG PLAYLIST MUSIC MANAGER
+   DEDICATED BACKGROUND MUSIC & SOUND SYNTHESIZER ENGINE
    ========================================================================== */
 
 class SoundEngine {
   constructor() {
     this.audioCtx = null;
     this.muted = false;
-    this.volume = 0.5;
+    this.volume = 0.85;
     this.bgMusicPlaying = false;
 
-    // 5-Song Playlist setup
-    this.playlist = [];
-    this.currentTrackIndex = 0;
-    this.audioElement = new Audio();
+    // Dedicated single background song (music.mp3 - "I Think They Call This Love")
+    this.audioElement = new Audio('music.mp3');
+    this.audioElement.loop = true;
     this.audioElement.volume = this.volume;
 
-    // Auto-advance playlist when current song ends
-    this.audioElement.addEventListener('ended', () => {
-      this.playNextTrack();
-    });
+    // Enable audio on first user gesture to comply with browser autoplay policies
+    const enableAudioOnGesture = () => {
+      if (!this.bgMusicPlaying && !this.muted) {
+        this.playBgMusic();
+      }
+      window.removeEventListener('click', enableAudioOnGesture);
+      window.removeEventListener('touchstart', enableAudioOnGesture);
+    };
 
-    this.audioElement.addEventListener('error', (e) => {
-      console.warn('Audio playlist track error, trying next track or synth fallback...', e);
-      this.playNextTrack();
-    });
+    window.addEventListener('click', enableAudioOnGesture);
+    window.addEventListener('touchstart', enableAudioOnGesture);
   }
 
   init() {
@@ -38,137 +39,44 @@ class SoundEngine {
     }
   }
 
-  setPlaylist(songsArray) {
-    if (Array.isArray(songsArray) && songsArray.length > 0) {
-      this.playlist = songsArray;
-    }
-  }
-
-  getCurrentTrack() {
-    if (!this.playlist || this.playlist.length === 0) return null;
-    return this.playlist[this.currentTrackIndex];
-  }
-
-  toggleAmbientBgMusic() {
-    this.init();
-
-    if (this.bgMusicPlaying) {
-      this.pauseBgMusic();
-      return false;
-    } else {
-      return this.playBgMusic();
-    }
-  }
-
   playBgMusic() {
-    if (this.playlist && this.playlist.length > 0) {
-      const track = this.getCurrentTrack();
-      if (track && track.url) {
-        this.audioElement.src = track.url;
-        this.audioElement.volume = this.volume;
-        this.audioElement.loop = (this.playlist.length === 1);
-        this.audioElement.play().then(() => {
-          this.bgMusicPlaying = true;
-          this.showTrackToast(track.title);
-        }).catch(err => {
-          console.warn('HTML5 Audio autoplay restricted. Falling back to Web Audio synth.', err);
-          this.playSynthBgMusic();
-        });
-        return true;
-      }
-    }
+    this.init();
+    if (this.muted) return false;
 
-    // Fallback Web Audio Synth
-    return this.playSynthBgMusic();
-  }
-
-  playNextTrack() {
-    if (!this.playlist || this.playlist.length === 0) return;
-    this.currentTrackIndex = (this.currentTrackIndex + 1) % this.playlist.length;
-    if (this.bgMusicPlaying) {
-      this.playBgMusic();
-    }
-  }
-
-  playPreviousTrack() {
-    if (!this.playlist || this.playlist.length === 0) return;
-    this.currentTrackIndex = (this.currentTrackIndex - 1 + this.playlist.length) % this.playlist.length;
-    if (this.bgMusicPlaying) {
-      this.playBgMusic();
-    }
+    this.audioElement.volume = this.volume;
+    this.audioElement.play().then(() => {
+      this.bgMusicPlaying = true;
+    }).catch(err => {
+      console.warn('Autoplay waiting for user gesture...', err);
+    });
+    return true;
   }
 
   pauseBgMusic() {
     this.bgMusicPlaying = false;
     this.audioElement.pause();
-    if (this.bgMusicTimer) clearInterval(this.bgMusicTimer);
   }
 
-  showTrackToast(title) {
-    const existing = document.getElementById('music-track-toast');
-    if (existing) existing.remove();
+  toggleSound() {
+    this.init();
+    this.muted = !this.muted;
+    this.audioElement.muted = this.muted;
 
-    const toast = document.createElement('div');
-    toast.id = 'music-track-toast';
-    toast.className = 'glass-card text-center p-2 position-fixed shadow-lg';
-    toast.style.top = '70px';
-    toast.style.right = '20px';
-    toast.style.zIndex = '9999';
-    toast.style.borderRadius = '30px';
-    toast.style.fontSize = '0.9rem';
-    toast.innerHTML = `<span class="text-accent fw-bold"><i class="fa-solid fa-music me-1"></i> Now Playing:</span> ${title || 'Romantic Melody'}`;
+    if (this.muted) {
+      this.pauseBgMusic();
+    } else {
+      this.playBgMusic();
+    }
 
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-      if (toast.parentNode) toast.parentNode.removeChild(toast);
-    }, 3500);
+    return this.muted;
   }
 
-  // Synthesized chord loop fallback
-  playSynthBgMusic() {
-    if (!this.audioCtx) return false;
-    this.bgMusicPlaying = true;
-    const chords = [
-      [261.63, 329.63, 392.00, 493.88], // C maj7
-      [220.00, 261.63, 329.63, 392.00], // A min7
-      [174.61, 220.00, 261.63, 329.63], // F maj7
-      [196.00, 246.94, 293.66, 349.23]  // G7
-    ];
-    let chordIndex = 0;
-
-    const playChord = () => {
-      if (!this.bgMusicPlaying || this.muted) return;
-      const now = this.audioCtx.currentTime;
-      const currentChord = chords[chordIndex];
-      
-      currentChord.forEach((freq) => {
-        const osc = this.audioCtx.createOscillator();
-        const gain = this.audioCtx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now);
-
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(0.02 * this.volume, now + 1.5);
-        gain.gain.linearRampToValueAtTime(0.001, now + 3.8);
-
-        osc.connect(gain);
-        gain.connect(this.audioCtx.destination);
-
-        osc.start(now);
-        osc.stop(now + 4.0);
-      });
-
-      chordIndex = (chordIndex + 1) % chords.length;
-    };
-
-    playChord();
-    this.bgMusicTimer = setInterval(playChord, 4000);
-    return true;
+  setVolume(val) {
+    this.volume = Math.max(0, Math.min(1, val));
+    this.audioElement.volume = this.volume;
   }
 
-  // Sound FX Synthesizers
+  // Synthesized Sound FX
   playCorrectSound() {
     if (this.muted) return;
     this.init();
@@ -267,17 +175,6 @@ class SoundEngine {
 
     osc.start(now);
     osc.stop(now + 0.13);
-  }
-
-  setVolume(val) {
-    this.volume = Math.max(0, Math.min(1, val));
-    this.audioElement.volume = this.volume;
-  }
-
-  toggleMute() {
-    this.muted = !this.muted;
-    this.audioElement.muted = this.muted;
-    return this.muted;
   }
 }
 

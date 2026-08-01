@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Top Nav Buttons
   const btnToggleTheme = document.getElementById('btn-toggle-theme');
-  const btnToggleAudio = document.getElementById('btn-toggle-audio');
   const btnToggleSound = document.getElementById('btn-toggle-sound');
   const btnRestartQuiz = document.getElementById('btn-restart-quiz');
   const btnNavGames = document.getElementById('btn-nav-games');
@@ -737,10 +736,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   btnToggleSound.addEventListener('click', () => {
-    const isMuted = window.soundEngine.toggleMute();
+    const isMuted = window.soundEngine.toggleSound();
     btnToggleSound.innerHTML = isMuted 
       ? '<i class="fa-solid fa-volume-xmark text-muted"></i>' 
-      : '<i class="fa-solid fa-volume-high"></i>';
+      : '<i class="fa-solid fa-volume-high text-accent"></i>';
   });
 
   btnRestartQuiz.addEventListener('click', () => {
