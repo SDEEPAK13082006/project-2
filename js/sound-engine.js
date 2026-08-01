@@ -17,14 +17,19 @@ class SoundEngine {
     this.audioElement.setAttribute('playsinline', 'true');
     this.audioElement.setAttribute('webkit-playsinline', 'true');
 
+    // Online Fallback Romantic Audio in case music.mp3 is delayed or restricted
+    this.fallbackAudio = new Audio('https://assets.mixkit.co/music/preview/mixkit-romantic-sunset-594.mp3');
+    this.fallbackAudio.loop = true;
+    this.fallbackAudio.volume = this.volume;
+    this.fallbackAudio.setAttribute('playsinline', 'true');
+
     // Dedicated Grand Finale Soft Piano Love BGM
-    this.finaleAudioElement = new Audio('https://assets.mixkit.co/music/preview/mixkit-romantic-sunset-594.mp3');
+    this.finaleAudioElement = new Audio('https://assets.mixkit.co/music/preview/mixkit-sweet-love-592.mp3');
     this.finaleAudioElement.loop = true;
     this.finaleAudioElement.volume = this.volume;
     this.finaleAudioElement.setAttribute('playsinline', 'true');
-    this.finaleAudioElement.setAttribute('webkit-playsinline', 'true');
 
-    // Mobile Audio Unlocking logic
+    // Mobile Audio Unlocking logic on first touch/click
     const unlockMobileAudio = () => {
       this.init();
       if (!this.bgMusicPlaying && !this.muted) {
@@ -33,14 +38,16 @@ class SoundEngine {
     };
 
     ['click', 'touchstart', 'touchend', 'pointerdown'].forEach(evt => {
-      window.addEventListener(evt, unlockMobileAudio, { once: true, passive: true });
+      window.addEventListener(evt, unlockMobileAudio, { passive: true });
     });
   }
 
   setPlaylist(list) {
     this.playlist = list || [];
     if (Array.isArray(list) && list.length > 0 && list[0].url) {
-      this.audioElement.src = list[0].url;
+      if (list[0].url !== 'music.mp3') {
+        this.audioElement.src = list[0].url;
+      }
     }
   }
 
@@ -62,12 +69,20 @@ class SoundEngine {
 
     this.audioElement.muted = false;
     this.audioElement.volume = this.volume;
+
     const playPromise = this.audioElement.play();
     if (playPromise !== undefined) {
       playPromise.then(() => {
         this.bgMusicPlaying = true;
       }).catch(err => {
-        console.warn('Autoplay policy waiting for user touch gesture...', err);
+        console.warn('Primary music.mp3 playback note, trying fallback audio stream...', err);
+        if (this.fallbackAudio) {
+          this.fallbackAudio.muted = false;
+          this.fallbackAudio.volume = this.volume;
+          this.fallbackAudio.play().then(() => {
+            this.bgMusicPlaying = true;
+          }).catch(e => console.warn('Autoplay gesture waiting', e));
+        }
       });
     }
     return true;
@@ -75,7 +90,8 @@ class SoundEngine {
 
   pauseBgMusic() {
     this.bgMusicPlaying = false;
-    this.audioElement.pause();
+    if (this.audioElement) this.audioElement.pause();
+    if (this.fallbackAudio) this.fallbackAudio.pause();
   }
 
   playFinaleBgm() {
@@ -109,21 +125,10 @@ class SoundEngine {
     this.muted = !this.muted;
 
     if (this.muted) {
-      this.audioElement.muted = true;
-      this.audioElement.pause();
+      this.pauseBgMusic();
       if (this.finaleAudioElement) this.finaleAudioElement.pause();
-      this.bgMusicPlaying = false;
     } else {
-      this.audioElement.muted = false;
-      this.audioElement.volume = this.volume;
-      const playPromise = this.audioElement.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          this.bgMusicPlaying = true;
-        }).catch(err => {
-          console.warn('Error unmuting audio:', err);
-        });
-      }
+      this.playBgMusic();
     }
 
     return this.muted;
@@ -131,7 +136,8 @@ class SoundEngine {
 
   setVolume(val) {
     this.volume = Math.max(0, Math.min(1, val));
-    this.audioElement.volume = this.volume;
+    if (this.audioElement) this.audioElement.volume = this.volume;
+    if (this.fallbackAudio) this.fallbackAudio.volume = this.volume;
     if (this.finaleAudioElement) this.finaleAudioElement.volume = this.volume;
   }
 

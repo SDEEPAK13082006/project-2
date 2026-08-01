@@ -215,7 +215,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnStartJourney) {
     btnStartJourney.addEventListener('click', (e) => {
       if (e) e.preventDefault();
-      if (window.soundEngine) window.soundEngine.playClickSound();
+      if (window.soundEngine) {
+        window.soundEngine.playClickSound();
+        window.soundEngine.playBgMusic();
+      }
       showView('view-quiz');
       loadQuestionView();
     });
@@ -224,7 +227,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnHeroGames) {
     btnHeroGames.addEventListener('click', (e) => {
       if (e) e.preventDefault();
-      if (window.soundEngine) window.soundEngine.playClickSound();
+      if (window.soundEngine) {
+        window.soundEngine.playClickSound();
+        window.soundEngine.playBgMusic();
+      }
       showView('view-games');
       openGamesHub();
     });
