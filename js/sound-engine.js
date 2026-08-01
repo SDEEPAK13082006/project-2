@@ -16,20 +16,16 @@ class SoundEngine {
     this.audioElement.setAttribute('playsinline', 'true');
     this.audioElement.setAttribute('webkit-playsinline', 'true');
 
-    // Mobile Audio Unlocking logic (listens to all mobile touch & pointer gestures)
-    const unlockMobileAudio = () => {
+    // Mobile Audio Unlocking logic
+    const unlockMobileAudio = (e) => {
       this.init();
       if (!this.bgMusicPlaying && !this.muted) {
         this.playBgMusic();
       }
-      // Remove listeners once audio is unlocked
-      ['click', 'touchstart', 'touchend', 'pointerdown'].forEach(evt => {
-        window.removeEventListener(evt, unlockMobileAudio);
-      });
     };
 
     ['click', 'touchstart', 'touchend', 'pointerdown'].forEach(evt => {
-      window.addEventListener(evt, unlockMobileAudio, { passive: true });
+      window.addEventListener(evt, unlockMobileAudio, { once: true, passive: true });
     });
   }
 
@@ -49,13 +45,14 @@ class SoundEngine {
     this.init();
     if (this.muted) return false;
 
+    this.audioElement.muted = false;
     this.audioElement.volume = this.volume;
     const playPromise = this.audioElement.play();
     if (playPromise !== undefined) {
       playPromise.then(() => {
         this.bgMusicPlaying = true;
       }).catch(err => {
-        console.warn('Mobile autoplay policy waiting for user touch gesture...', err);
+        console.warn('Autoplay policy waiting for user touch gesture...', err);
       });
     }
     return true;
@@ -69,12 +66,22 @@ class SoundEngine {
   toggleSound() {
     this.init();
     this.muted = !this.muted;
-    this.audioElement.muted = this.muted;
 
     if (this.muted) {
-      this.pauseBgMusic();
+      this.audioElement.muted = true;
+      this.audioElement.pause();
+      this.bgMusicPlaying = false;
     } else {
-      this.playBgMusic();
+      this.audioElement.muted = false;
+      this.audioElement.volume = this.volume;
+      const playPromise = this.audioElement.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          this.bgMusicPlaying = true;
+        }).catch(err => {
+          console.warn('Error unmuting audio:', err);
+        });
+      }
     }
 
     return this.muted;

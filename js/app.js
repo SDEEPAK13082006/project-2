@@ -735,7 +735,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       : '<i class="fa-solid fa-music"></i>';
   });
 
-  btnToggleSound.addEventListener('click', () => {
+  btnToggleSound.addEventListener('click', (e) => {
+    e.stopPropagation();
     const isMuted = window.soundEngine.toggleSound();
     btnToggleSound.innerHTML = isMuted 
       ? '<i class="fa-solid fa-volume-xmark text-muted"></i>' 
