@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const data = await window.dataLoader.loadData();
   const savedState = window.dataLoader.getSavedState();
 
-  // Set 5-song playlist in Sound Engine
+  // Set single background song playlist in Sound Engine
   if (data.musicPlaylist && window.soundEngine) {
     window.soundEngine.setPlaylist(data.musicPlaylist);
   }
@@ -112,15 +112,47 @@ document.addEventListener('DOMContentLoaded', async () => {
   const gameArenaPuzzle = document.getElementById('game-arena-puzzle');
   const gameArenaBalloons = document.getElementById('game-arena-balloons');
 
+  // Helper: Share Preview Updater
+  function updateShareUrlPreview() {
+    if (!generatedShareUrl && !shareInputTo) return;
+    try {
+      const baseUrl = window.location.origin + window.location.pathname;
+      const toVal = shareInputTo ? (shareInputTo.value.trim() || 'My Sweetheart') : partnerNickname;
+      const fromVal = shareInputFrom ? shareInputFrom.value.trim() : 'Your Devoted Love';
+      const videoVal = shareInputVideo ? shareInputVideo.value.trim() : '';
+
+      const params = new URLSearchParams();
+      if (toVal) params.set('to', toVal);
+      if (fromVal) params.set('from', fromVal);
+      if (videoVal) params.set('video', videoVal);
+
+      const fullShareUrl = `${baseUrl}?${params.toString()}`;
+      
+      if (generatedShareUrl) generatedShareUrl.value = fullShareUrl;
+
+      const encodedText = encodeURIComponent(`Hey ${toVal}! ❤️ I created a special romantic quiz & mini-games for you: "Our Love Quiz ❤️". Take it here:`);
+      const encodedUrl = encodeURIComponent(fullShareUrl);
+
+      if (btnWhatsappShare) {
+        btnWhatsappShare.href = `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`;
+      }
+      if (btnTelegramShare) {
+        btnTelegramShare.href = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+      }
+    } catch (e) {}
+  }
+
   // --------------------------------------------------------------------------
   // 2. THEME & INITIALIZATION
   // --------------------------------------------------------------------------
   function applyTheme(theme) {
     currentTheme = theme;
     document.documentElement.setAttribute('data-theme', theme);
-    btnToggleTheme.innerHTML = theme === 'night' 
-      ? '<i class="fa-solid fa-sun"></i>' 
-      : '<i class="fa-solid fa-moon"></i>';
+    if (btnToggleTheme) {
+      btnToggleTheme.innerHTML = theme === 'night' 
+        ? '<i class="fa-solid fa-sun"></i>' 
+        : '<i class="fa-solid fa-moon"></i>';
+    }
     window.dataLoader.saveState({ theme });
   }
   applyTheme(currentTheme);
@@ -154,7 +186,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 3. NAVIGATION VIEW SWITCHER
   // --------------------------------------------------------------------------
   function showView(viewId) {
-    // Stop active mini-games when leaving games view
     if (viewId !== 'view-games' && window.miniGamesManager) {
       window.miniGamesManager.stopAllGames();
     }
@@ -173,47 +204,54 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (navBrandLogo) {
     navBrandLogo.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       showView('view-hero');
     });
   }
 
   // --------------------------------------------------------------------------
-  // 4. HERO SECTION LOGIC & EASTER EGGS
+  // 4. HERO SECTION LOGIC & BUTTON BINDINGS
   // --------------------------------------------------------------------------
-  btnStartJourney.addEventListener('click', () => {
-    window.soundEngine.playClickSound();
-    showView('view-quiz');
-    loadQuestionView();
-  });
+  if (btnStartJourney) {
+    btnStartJourney.addEventListener('click', (e) => {
+      if (e) e.preventDefault();
+      if (window.soundEngine) window.soundEngine.playClickSound();
+      showView('view-quiz');
+      loadQuestionView();
+    });
+  }
 
   if (btnHeroGames) {
-    btnHeroGames.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+    btnHeroGames.addEventListener('click', (e) => {
+      if (e) e.preventDefault();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       showView('view-games');
       openGamesHub();
     });
   }
 
   if (btnNavGames) {
-    btnNavGames.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+    btnNavGames.addEventListener('click', (e) => {
+      if (e) e.preventDefault();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       showView('view-games');
       openGamesHub();
     });
   }
 
   // Mascot Easter Egg (Click 5 times)
-  heroHeartMascot.addEventListener('click', () => {
-    easterEggClicks++;
-    window.soundEngine.playHeartPopSound();
+  if (heroHeartMascot) {
+    heroHeartMascot.addEventListener('click', () => {
+      easterEggClicks++;
+      if (window.soundEngine) window.soundEngine.playHeartPopSound();
 
-    if (easterEggClicks >= 5) {
-      window.particleSystem.triggerRainbowStorm();
-      alert(`💖 SECRET UNLOCKED! 💖\n"You are the most precious person in the world to me, ${partnerNickname}!" ✨`);
-      easterEggClicks = 0;
-    }
-  });
+      if (easterEggClicks >= 5) {
+        if (window.particleSystem) window.particleSystem.triggerRainbowStorm();
+        alert(`💖 SECRET UNLOCKED! 💖\n"You are the most precious person in the world to me, ${partnerNickname}!" ✨`);
+        easterEggClicks = 0;
+      }
+    });
+  }
 
   // --------------------------------------------------------------------------
   // 5. QUIZ ENGINE VIEW & LOGIC
@@ -228,36 +266,38 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    quizExplanationBox.classList.add('d-none');
-    quizQuoteInterstitial.classList.add('d-none');
-    quizNextContainer.classList.add('d-none');
-    quizOptionsContainer.innerHTML = '';
+    if (quizExplanationBox) quizExplanationBox.classList.add('d-none');
+    if (quizQuoteInterstitial) quizQuoteInterstitial.classList.add('d-none');
+    if (quizNextContainer) quizNextContainer.classList.add('d-none');
+    if (quizOptionsContainer) quizOptionsContainer.innerHTML = '';
 
-    quizCounter.innerText = `Question ${currentIdx + 1} of ${total}`;
+    if (quizCounter) quizCounter.innerText = `Question ${currentIdx + 1} of ${total}`;
     const progressPct = ((currentIdx) / total) * 100;
-    quizProgressBar.style.width = `${progressPct}%`;
+    if (quizProgressBar) quizProgressBar.style.width = `${progressPct}%`;
 
-    quizQuestionText.innerText = q.question;
+    if (quizQuestionText) quizQuestionText.innerText = q.question;
 
-    q.options.forEach((optText, idx) => {
-      const optBtn = document.createElement('div');
-      optBtn.className = 'option-card';
-      optBtn.innerHTML = `
-        <span>${optText}</span>
-        <i class="fa-regular fa-circle option-icon text-muted fs-5"></i>
-      `;
-      optBtn.addEventListener('click', () => handleAnswerSelection(idx));
-      quizOptionsContainer.appendChild(optBtn);
-    });
+    if (quizOptionsContainer) {
+      q.options.forEach((optText, idx) => {
+        const optBtn = document.createElement('div');
+        optBtn.className = 'option-card';
+        optBtn.innerHTML = `
+          <span>${optText}</span>
+          <i class="fa-regular fa-circle option-icon text-muted fs-5"></i>
+        `;
+        optBtn.addEventListener('click', () => handleAnswerSelection(idx));
+        quizOptionsContainer.appendChild(optBtn);
+      });
+    }
 
-    if (data.config.enableTimer) {
-      quizTimerBadge.classList.remove('d-none');
+    if (data.config && data.config.enableTimer) {
+      if (quizTimerBadge) quizTimerBadge.classList.remove('d-none');
       window.quizEngine.startTimer(
-        (sec) => { timerSeconds.innerText = sec; },
+        (sec) => { if (timerSeconds) timerSeconds.innerText = sec; },
         () => { handleAnswerSelection(-1); }
       );
     } else {
-      quizTimerBadge.classList.add('d-none');
+      if (quizTimerBadge) quizTimerBadge.classList.add('d-none');
     }
   }
 
@@ -265,7 +305,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const result = window.quizEngine.submitAnswer(selectedIdx);
     if (!result) return;
 
-    const optionCards = quizOptionsContainer.querySelectorAll('.option-card');
+    const optionCards = quizOptionsContainer ? quizOptionsContainer.querySelectorAll('.option-card') : [];
 
     optionCards.forEach((card, idx) => {
       card.classList.add('disabled');
@@ -281,50 +321,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     if (result.isCorrect) {
-      window.soundEngine.playCorrectSound();
-      window.particleSystem.triggerConfettiBurst(35);
-      explanationHeader.innerHTML = `<span class="text-success"><i class="fa-solid fa-heart"></i> Spot On, ${partnerNickname}!</span>`;
+      if (window.soundEngine) window.soundEngine.playCorrectSound();
+      if (window.particleSystem) window.particleSystem.triggerConfettiBurst(35);
+      if (explanationHeader) explanationHeader.innerHTML = `<span class="text-success"><i class="fa-solid fa-heart"></i> Spot On, ${partnerNickname}!</span>`;
     } else {
-      window.soundEngine.playIncorrectSound();
-      explanationHeader.innerHTML = `<span class="text-danger"><i class="fa-solid fa-heart-crack"></i> Almost! But I Still Love You 💕</span>`;
+      if (window.soundEngine) window.soundEngine.playIncorrectSound();
+      if (explanationHeader) explanationHeader.innerHTML = `<span class="text-danger"><i class="fa-solid fa-heart-crack"></i> Almost! But I Still Love You 💕</span>`;
     }
 
-    explanationText.innerText = result.explanation;
-    quizExplanationBox.classList.remove('d-none');
+    if (explanationText) explanationText.innerText = result.explanation;
+    if (quizExplanationBox) quizExplanationBox.classList.remove('d-none');
 
     if (window.quizEngine.currentIndex % 3 === 0) {
-      quoteText.innerText = window.quizEngine.getRandomQuote();
-      quizQuoteInterstitial.classList.remove('d-none');
+      if (quoteText) quoteText.innerText = window.quizEngine.getRandomQuote();
+      if (quizQuoteInterstitial) quizQuoteInterstitial.classList.remove('d-none');
     }
 
-    quizNextContainer.classList.remove('d-none');
+    if (quizNextContainer) quizNextContainer.classList.remove('d-none');
   }
 
-  btnNextQuestion.addEventListener('click', () => {
-    window.soundEngine.playClickSound();
-    const nextState = window.quizEngine.nextQuestion();
+  if (btnNextQuestion) {
+    btnNextQuestion.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClickSound();
+      const nextState = window.quizEngine.nextQuestion();
 
-    if (nextState.isCompleted) {
-      renderResultsView();
-    } else {
-      loadQuestionView();
-    }
-  });
+      if (nextState.isCompleted) {
+        renderResultsView();
+      } else {
+        loadQuestionView();
+      }
+    });
+  }
 
   // --------------------------------------------------------------------------
   // 6. RESULTS & CERTIFICATE
   // --------------------------------------------------------------------------
   function renderResultsView() {
     showView('view-results');
-    window.soundEngine.playCorrectSound();
-    window.particleSystem.triggerConfettiBurst(50);
+    if (window.soundEngine) window.soundEngine.playCorrectSound();
+    if (window.particleSystem) window.particleSystem.triggerConfettiBurst(50);
 
     const score = window.quizEngine.score;
     const total = window.quizEngine.getTotalQuestions();
     const tierMsg = window.quizEngine.getScoreMessage();
 
-    resultScoreNum.innerText = score;
-    resultTierMessage.innerText = `“${tierMsg}”`;
+    if (resultScoreNum) resultScoreNum.innerText = score;
+    if (resultTierMessage) resultTierMessage.innerText = `“${tierMsg}”`;
 
     const ratio = score / total;
     const offset = 440 - (440 * ratio);
@@ -349,23 +391,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (backendStatusBadge) backendStatusBadge.classList.remove('d-none');
       }
     } catch (err) {
-      console.warn('Backend API submission note: Running in static mode.', err);
+      console.warn('Backend API note: Static client-side mode.', err);
     }
   }
 
-  btnDownloadCert.addEventListener('click', () => {
-    window.soundEngine.playClickSound();
-    const score = window.quizEngine.score;
-    const total = window.quizEngine.getTotalQuestions();
-    const tierMsg = window.quizEngine.getScoreMessage();
-    window.certificateGenerator.downloadCertificate(partnerNickname, score, total, tierMsg);
-  });
+  if (btnDownloadCert) {
+    btnDownloadCert.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClickSound();
+      const score = window.quizEngine.score;
+      const total = window.quizEngine.getTotalQuestions();
+      const tierMsg = window.quizEngine.getScoreMessage();
+      window.certificateGenerator.downloadCertificate(partnerNickname, score, total, tierMsg);
+    });
+  }
 
-  btnOpenLoveStory.addEventListener('click', () => {
-    window.soundEngine.playClickSound();
-    showView('view-story');
-    renderLoveStoryPage();
-  });
+  if (btnOpenLoveStory) {
+    btnOpenLoveStory.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClickSound();
+      showView('view-story');
+      renderLoveStoryPage();
+    });
+  }
 
   // --------------------------------------------------------------------------
   // 7. LOVE STORY PAGE LOGIC
@@ -406,7 +452,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       vVideo.addEventListener('play', () => {
         if (window.soundEngine && window.soundEngine.bgMusicPlaying) {
-          window.soundEngine.toggleAmbientBgMusic();
+          window.soundEngine.pauseBgMusic();
         }
         if (window.particleSystem) {
           window.particleSystem.triggerConfettiBurst(20);
@@ -458,7 +504,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="text-center text-muted small mt-1">${item.date}</div>
       `;
       card.addEventListener('click', () => {
-        window.soundEngine.playClickSound();
+        if (window.soundEngine) window.soundEngine.playClickSound();
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxTitle = document.getElementById('lightbox-title');
         const lightboxCaption = document.getElementById('lightbox-caption');
@@ -476,7 +522,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
       renderGallery(e.target.dataset.filter);
@@ -509,7 +555,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cdMins = document.getElementById('cd-mins');
     const cdSecs = document.getElementById('cd-secs');
 
-    const targetDate = new Date(data.config.anniversaryDate || "2027-02-14T00:00:00").getTime();
+    const targetDate = new Date((data.config && data.config.anniversaryDate) ? data.config.anniversaryDate : "2027-02-14T00:00:00").getTime();
 
     function updateCd() {
       const now = new Date().getTime();
@@ -534,15 +580,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     setInterval(updateCd, 1000);
   }
 
-  btnOpenMyHeart.addEventListener('click', () => {
-    window.soundEngine.playHeartPopSound();
-    window.particleSystem.triggerConfettiBurst(40);
-    if (secretMessageText) {
-      secretMessageText.innerText = data.secretMessage || "You hold the key to my heart! 💖";
-    }
-    const modal = new bootstrap.Modal(document.getElementById('heartSecretModal'));
-    modal.show();
-  });
+  if (btnOpenMyHeart) {
+    btnOpenMyHeart.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playHeartPopSound();
+      if (window.particleSystem) window.particleSystem.triggerConfettiBurst(40);
+      if (secretMessageText) {
+        secretMessageText.innerText = data.secretMessage || "You hold the key to my heart! 💖";
+      }
+      const modal = new bootstrap.Modal(document.getElementById('heartSecretModal'));
+      modal.show();
+    });
+  }
 
   // --------------------------------------------------------------------------
   // 8. ROMANTIC MINI-GAMES ARCADE CONTROLLER 🎮❤️
@@ -569,7 +617,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (selectCatch) {
     selectCatch.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       hideHubShowArena(gameArenaCatch);
       if (window.miniGamesManager) window.miniGamesManager.initCatchTheHearts();
     });
@@ -577,7 +625,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (selectFind) {
     selectFind.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       hideHubShowArena(gameArenaFind);
       if (window.miniGamesManager) window.miniGamesManager.initFindHiddenHeart();
     });
@@ -585,7 +633,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (selectPuzzle) {
     selectPuzzle.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       hideHubShowArena(gameArenaPuzzle);
       if (window.miniGamesManager) window.miniGamesManager.initLovePuzzle();
     });
@@ -593,7 +641,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (selectBalloons) {
     selectBalloons.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       hideHubShowArena(gameArenaBalloons);
       if (window.miniGamesManager) window.miniGamesManager.initPopTheBalloons();
     });
@@ -602,47 +650,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Back to Hub Buttons
   document.querySelectorAll('.btn-back-to-hub').forEach(btn => {
     btn.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       openGamesHub();
     });
   });
 
   // --------------------------------------------------------------------------
-  // 9. SHARE LINK GENERATOR LOGIC
+  // 9. SHARE MODAL BINDINGS
   // --------------------------------------------------------------------------
-  function updateShareUrlPreview() {
-    const baseUrl = window.location.origin + window.location.pathname;
-    const toVal = shareInputTo ? (shareInputTo.value.trim() || 'My Sweetheart') : partnerNickname;
-    const fromVal = shareInputFrom ? shareInputFrom.value.trim() : 'Your Devoted Love';
-    const videoVal = shareInputVideo ? shareInputVideo.value.trim() : '';
-
-    const params = new URLSearchParams();
-    if (toVal) params.set('to', toVal);
-    if (fromVal) params.set('from', fromVal);
-    if (videoVal) params.set('video', videoVal);
-
-    const fullShareUrl = `${baseUrl}?${params.toString()}`;
-    
-    if (generatedShareUrl) generatedShareUrl.value = fullShareUrl;
-
-    const encodedText = encodeURIComponent(`Hey ${toVal}! ❤️ I created a special romantic quiz & mini-games for you: "Our Love Quiz ❤️". Take it here:`);
-    const encodedUrl = encodeURIComponent(fullShareUrl);
-
-    if (btnWhatsappShare) {
-      btnWhatsappShare.href = `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`;
-    }
-    if (btnTelegramShare) {
-      btnTelegramShare.href = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
-    }
-  }
-
   if (shareInputTo) shareInputTo.addEventListener('input', updateShareUrlPreview);
   if (shareInputFrom) shareInputFrom.addEventListener('input', updateShareUrlPreview);
   if (shareInputVideo) shareInputVideo.addEventListener('input', updateShareUrlPreview);
 
   if (btnOpenShareModal) {
     btnOpenShareModal.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       updateShareUrlPreview();
       const modal = new bootstrap.Modal(document.getElementById('shareLinkModal'));
       modal.show();
@@ -651,7 +673,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (btnCopyShareUrl) {
     btnCopyShareUrl.addEventListener('click', () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       if (generatedShareUrl) {
         generatedShareUrl.select();
         navigator.clipboard.writeText(generatedShareUrl.value);
@@ -668,7 +690,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --------------------------------------------------------------------------
   if (btnOpenSubmissionsModal) {
     btnOpenSubmissionsModal.addEventListener('click', async () => {
-      window.soundEngine.playClickSound();
+      if (window.soundEngine) window.soundEngine.playClickSound();
       const modal = new bootstrap.Modal(document.getElementById('submissionsModal'));
       modal.show();
 
@@ -722,33 +744,32 @@ document.addEventListener('DOMContentLoaded', async () => {
   // --------------------------------------------------------------------------
   // 11. NAVBAR CONTROLS
   // --------------------------------------------------------------------------
-  btnToggleTheme.addEventListener('click', () => {
-    window.soundEngine.playClickSound();
-    const newTheme = currentTheme === 'day' ? 'night' : 'day';
-    applyTheme(newTheme);
-  });
+  if (btnToggleTheme) {
+    btnToggleTheme.addEventListener('click', () => {
+      if (window.soundEngine) window.soundEngine.playClickSound();
+      const newTheme = currentTheme === 'day' ? 'night' : 'day';
+      applyTheme(newTheme);
+    });
+  }
 
-  btnToggleAudio.addEventListener('click', () => {
-    const isPlaying = window.soundEngine.toggleAmbientBgMusic();
-    btnToggleAudio.innerHTML = isPlaying 
-      ? '<i class="fa-solid fa-volume-xmark text-danger"></i>' 
-      : '<i class="fa-solid fa-music"></i>';
-  });
+  if (btnToggleSound) {
+    btnToggleSound.addEventListener('click', (e) => {
+      if (e) e.stopPropagation();
+      const isMuted = window.soundEngine ? window.soundEngine.toggleSound() : false;
+      btnToggleSound.innerHTML = isMuted 
+        ? '<i class="fa-solid fa-volume-xmark text-muted"></i>' 
+        : '<i class="fa-solid fa-volume-high text-accent"></i>';
+    });
+  }
 
-  btnToggleSound.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isMuted = window.soundEngine.toggleSound();
-    btnToggleSound.innerHTML = isMuted 
-      ? '<i class="fa-solid fa-volume-xmark text-muted"></i>' 
-      : '<i class="fa-solid fa-volume-high text-accent"></i>';
-  });
-
-  btnRestartQuiz.addEventListener('click', () => {
-    if (confirm('Are you sure you want to restart Our Love Quiz? ❤️')) {
-      window.dataLoader.resetProgress();
-      window.quizEngine.init(data, null);
-      showView('view-hero');
-    }
-  });
+  if (btnRestartQuiz) {
+    btnRestartQuiz.addEventListener('click', () => {
+      if (confirm('Are you sure you want to restart Our Love Quiz? ❤️')) {
+        window.dataLoader.resetProgress();
+        window.quizEngine.init(data, null);
+        showView('view-hero');
+      }
+    });
+  }
 
 });
