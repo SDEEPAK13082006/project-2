@@ -151,12 +151,28 @@ const server = http.createServer((req, res) => {
   });
 });
 
+const os = require('os');
+
+function getLocalIpAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return 'localhost';
+}
+
 server.listen(PORT, () => {
+  const localIp = getLocalIpAddress();
   console.log(`
 =====================================================
 ❤️ OUR LOVE QUIZ NATIVE SERVER RUNNING ON PORT ${PORT} ❤️
-- Local Access: http://localhost:${PORT}
-- Results API:  http://localhost:${PORT}/api/results
+- Local Access:   http://localhost:${PORT}
+- Mobile Wi-Fi:   http://${localIp}:${PORT}
+- Results API:    http://localhost:${PORT}/api/results
 =====================================================
   `);
 });

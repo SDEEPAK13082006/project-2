@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DEDICATED BACKGROUND MUSIC & SOUND SYNTHESIZER ENGINE
+   DEDICATED MOBILE-OPTIMIZED AUDIO & SOUND SYNTHESIZER ENGINE
    ========================================================================== */
 
 class SoundEngine {
@@ -9,22 +9,28 @@ class SoundEngine {
     this.volume = 0.85;
     this.bgMusicPlaying = false;
 
-    // Dedicated single background song (music.mp3 - "I Think They Call This Love")
+    // Dedicated background song (music.mp3 - "I Think They Call This Love")
     this.audioElement = new Audio('music.mp3');
     this.audioElement.loop = true;
     this.audioElement.volume = this.volume;
+    this.audioElement.setAttribute('playsinline', 'true');
+    this.audioElement.setAttribute('webkit-playsinline', 'true');
 
-    // Enable audio on first user gesture to comply with browser autoplay policies
-    const enableAudioOnGesture = () => {
+    // Mobile Audio Unlocking logic (listens to all mobile touch & pointer gestures)
+    const unlockMobileAudio = () => {
+      this.init();
       if (!this.bgMusicPlaying && !this.muted) {
         this.playBgMusic();
       }
-      window.removeEventListener('click', enableAudioOnGesture);
-      window.removeEventListener('touchstart', enableAudioOnGesture);
+      // Remove listeners once audio is unlocked
+      ['click', 'touchstart', 'touchend', 'pointerdown'].forEach(evt => {
+        window.removeEventListener(evt, unlockMobileAudio);
+      });
     };
 
-    window.addEventListener('click', enableAudioOnGesture);
-    window.addEventListener('touchstart', enableAudioOnGesture);
+    ['click', 'touchstart', 'touchend', 'pointerdown'].forEach(evt => {
+      window.addEventListener(evt, unlockMobileAudio, { passive: true });
+    });
   }
 
   init() {
@@ -44,11 +50,14 @@ class SoundEngine {
     if (this.muted) return false;
 
     this.audioElement.volume = this.volume;
-    this.audioElement.play().then(() => {
-      this.bgMusicPlaying = true;
-    }).catch(err => {
-      console.warn('Autoplay waiting for user gesture...', err);
-    });
+    const playPromise = this.audioElement.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        this.bgMusicPlaying = true;
+      }).catch(err => {
+        console.warn('Mobile autoplay policy waiting for user touch gesture...', err);
+      });
+    }
     return true;
   }
 

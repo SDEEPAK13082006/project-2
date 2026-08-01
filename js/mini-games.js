@@ -21,8 +21,8 @@ class MiniGamesManager {
     const ctx = canvas.getContext('2d');
 
     const container = canvas.parentElement;
-    canvas.width = container.clientWidth || 600;
-    canvas.height = 400;
+    canvas.width = Math.min(window.innerWidth - 32, container.clientWidth || 600);
+    canvas.height = 380;
 
     let score = 0;
     let timeLeft = 30;
@@ -30,10 +30,10 @@ class MiniGamesManager {
     let timerId = null;
     let isRunning = true;
 
-    // Basket properties
+    // Responsive basket properties
     const basket = {
-      w: 80,
-      h: 24,
+      w: Math.min(80, canvas.width * 0.22),
+      h: 26,
       x: canvas.width / 2 - 40,
       y: canvas.height - 35,
       speed: 8
