@@ -1,0 +1,22 @@
+{
+  "name": "our-love-quiz",
+  "version": "1.0.0",
+  "description": "A premium, responsive romantic web app & quiz experience with backend score tracking and shareable link generator.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "love-quiz",
+    "romantic-app",
+    "express",
+    "backend"
+  ],
+  "author": "Our Love Quiz ❤️",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}

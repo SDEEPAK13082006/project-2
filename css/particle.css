@@ -1,0 +1,85 @@
+/* ==========================================================================
+   PARTICLE & CANVAS ANIMATIONS STYLES
+   ========================================================================== */
+
+#particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Floating Heart CSS Particles */
+.floating-heart {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10;
+  user-select: none;
+  animation: floatUp 6s linear infinite;
+  opacity: 0.8;
+  filter: drop-shadow(0 2px 5px rgba(255, 64, 129, 0.3));
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) rotate(0deg) scale(0.6);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Confetti burst elements */
+.confetti-piece {
+  position: fixed;
+  width: 10px;
+  height: 14px;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  z-index: 999;
+  border-radius: 3px;
+  animation: confettiExplode 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes confettiExplode {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+/* Sparkle cursor trailing element */
+.cursor-sparkle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 1rem;
+  animation: sparkleFade 0.8s ease-out forwards;
+}
+
+@keyframes sparkleFade {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -100%) scale(0.2);
+    opacity: 0;
+  }
+}

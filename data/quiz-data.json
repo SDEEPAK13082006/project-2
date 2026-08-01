@@ -1,0 +1,263 @@
+{
+  "config": {
+    "siteTitle": "Our Love Quiz ❤️",
+    "partnerNickname": "My Sweetheart",
+    "anniversaryDate": "2024-02-14",
+    "lockPassword": "",
+    "timerSeconds": 25,
+    "enableTimer": true,
+    "enableAudio": true
+  },
+  "quotes": [
+    "“In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine.” — Maya Angelou",
+    "“You are my today and all of my tomorrows.” — Leo Christopher",
+    "“If I know what love is, it is because of you.” — Hermann Hesse",
+    "“I love you not only for what you are, but for what I am when I am with you.” — Roy Croft",
+    "“Every love story is beautiful, but ours is my absolute favorite.” ❤️",
+    "“You're the poem I never knew how to write, and this life is the story I always wanted to tell.” 💖"
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "question": "Where did our story first begin?",
+      "options": ["At a cozy coffee shop ☕", "Through a late-night message 📱", "At a mutual friend's party 🎉", "Under a rainy street light 🌧️"],
+      "correctIndex": 1,
+      "explanation": "That very first message sparked a flame that has grown brighter every single day. I still reread our early messages with a huge smile! 💕"
+    },
+    {
+      "id": 2,
+      "question": "What is my absolute favorite thing about you?",
+      "options": ["Your contagious laugh 😄", "Your gentle, warm heart 💖", "The way your eyes light up ✨", "Literally EVERYTHING about you! 🥰"],
+      "correctIndex": 3,
+      "explanation": "Trick question! How could I ever choose just one thing? You are my favorite person in every possible way. ❤️"
+    },
+    {
+      "id": 3,
+      "question": "What was the very first movie or show we watched together?",
+      "options": ["A romantic comedy 💕", "An action-packed thriller 🎬", "A silly cartoon 🍿", "A horror movie where we held hands tight 👻"],
+      "correctIndex": 0,
+      "explanation": "We spent more time laughing and sharing glances than actually watching the screen! A memory I'll treasure forever. 🍿"
+    },
+    {
+      "id": 4,
+      "question": "Which snack or food do we always end up craving together?",
+      "options": ["Midnight Pizza 🍕", "Sweet Creamy Ice Cream 🍦", "Late-night Ramen 🍜", "Crispy French Fries 🍟"],
+      "correctIndex": 0,
+      "explanation": "No matter the hour, midnight pizza tastes 10x better when shared with you! 🍕"
+    },
+    {
+      "id": 5,
+      "question": "What is my favorite nickname to call you when we're alone?",
+      "options": ["My Sunshine ☀️", "Sweetheart 🍯", "My Favorite Human 💖", "Cutie Pie 🥧"],
+      "correctIndex": 2,
+      "explanation": "You truly are my favorite human in the entire universe! 🥰"
+    },
+    {
+      "id": 6,
+      "question": "What was our first memorable date like?",
+      "options": ["Walking under evening lights ✨", "Dinner at a quiet restaurant 🕯️", "Picnic in the park 🧺", "Stargazing and deep talks 🌌"],
+      "correctIndex": 0,
+      "explanation": "Walking beside you that evening, time felt like it stopped. I knew right then you were someone special. 🌹"
+    },
+    {
+      "id": 7,
+      "question": "What song instantly makes me think of you?",
+      "options": ["A soft romantic acoustic ballad 🎵", "An upbeat pop anthem 🎶", "Our official song 💕", "A sweet nostalgic melody 🎹"],
+      "correctIndex": 2,
+      "explanation": "Whenever our song plays, my heart skips a beat just like the first day we met! 🎧"
+    },
+    {
+      "id": 8,
+      "question": "What is my favorite memory with you so far?",
+      "options": ["Our spontaneous road trip 🚗", "The quiet rainy day indoors 🌧️", "Our endless deep conversations at 2 AM 🌙", "Every single second spent with you! ❤️"],
+      "correctIndex": 3,
+      "explanation": "Every moment spent with you becomes a prized memory in my heart. 💖"
+    },
+    {
+      "id": 9,
+      "question": "Who gave in first and confessed their feelings?",
+      "options": ["Me! I couldn't hold it in 💖", "You! With the sweetest words 🥰", "We both said it at the exact same time! ✨", "It was obvious without even speaking 🤫"],
+      "correctIndex": 0,
+      "explanation": "I couldn't hide how head-over-heels I was for you any longer! Best confession ever. 💘"
+    },
+    {
+      "id": 10,
+      "question": "What is our favorite unspoken ritual when we say goodbye?",
+      "options": ["A tight warm hug that lasts 10 seconds 🫂", "A sweet forehead kiss 💋", "Looking back and waving three times 👋", "Sending a 'get home safe' text immediately 📱"],
+      "correctIndex": 1,
+      "explanation": "A gentle kiss on your forehead carries all my love and protection for you. 💕"
+    },
+    {
+      "id": 11,
+      "question": "What is something funny or cute that always makes us laugh?",
+      "options": ["Inside jokes no one else understands 🤫", "Accidental silly mispronunciations 🤣", "Our goofy dancing 💃", "Playful teasing sessions 🤪"],
+      "correctIndex": 0,
+      "explanation": "Our secret inside jokes are the absolute best. We can share a look and burst out laughing! 😂"
+    },
+    {
+      "id": 12,
+      "question": "If we were trapped on a deserted island, what's the one thing I'd bring?",
+      "options": ["A cozy blanket 🛌", "Endless snacks 🍫", "YOU, obviously! 🥰", "A camera to capture memories 📸"],
+      "correctIndex": 2,
+      "explanation": "With you by my side, even a deserted island would feel like paradise! 🏝️"
+    },
+    {
+      "id": 13,
+      "question": "What weather is our absolute favorite for cuddling?",
+      "options": ["Rainy afternoon with hot chocolate ☕", "Chilly winter night under warm blankets ❄️", "Breezy autumn sunset 🍂", "Sunny afternoon in a hammock ☀️"],
+      "correctIndex": 0,
+      "explanation": "Rain drops on the window, cozy blankets, and warm hugs with you—perfection! 🌧️"
+    },
+    {
+      "id": 14,
+      "question": "What is my dream travel destination with you?",
+      "options": ["Romantic streets of Paris 🇫🇷", "Overwater bungalow in Maldives 🏝️", "Cozy cabin under the Northern Lights 🌌", "Anywhere, as long as we're together! 🗺️"],
+      "correctIndex": 3,
+      "explanation": "The destination doesn't matter nearly as much as the hand I get to hold while traveling there! ✈️"
+    },
+    {
+      "id": 15,
+      "question": "What super power would best describe our connection?",
+      "options": ["Mind reading (we finish each other's sentences) 🧠", "Teleportation (wishing we were together instantly) ⚡", "Time travel (making moments last forever) ⌛", "Heart healing (your hug fixes everything) 💓"],
+      "correctIndex": 3,
+      "explanation": "No matter how tough a day is, one warm embrace from you instantly makes everything alright. 🫂"
+    },
+    {
+      "id": 16,
+      "question": "What do I love doing with you on a lazy Sunday?",
+      "options": ["Binging our favorite series 📺", "Cooking a delicious messy meal 🍳", "Sleeping in late & cuddling 🛌", "All of the above! ✨"],
+      "correctIndex": 3,
+      "explanation": "Lazy Sundays with you are the purest form of happiness! ☕"
+    },
+    {
+      "id": 17,
+      "question": "What is the sweetest gift or gesture you ever gave me?",
+      "options": ["Your thoughtful words & time 💌", "A meaningful surprise gift 🎁", "A warm embrace when I needed it most 🫂", "Just being your amazing self every day 🌟"],
+      "correctIndex": 3,
+      "explanation": "Your presence in my life is the greatest gift I could ever ask for. ❤️"
+    },
+    {
+      "id": 18,
+      "question": "What do we love doing together late at night?",
+      "options": ["Talking about our big dreams for the future 🌟", "Sharing funny TikToks / memes 📱", "Listening to soft music side by side 🎶", "Stargazing and making wishes 🌌"],
+      "correctIndex": 0,
+      "explanation": "Building our future in conversation under the night sky is my absolute favorite pastime. ✨"
+    },
+    {
+      "id": 19,
+      "question": "How many times a day do I think about you?",
+      "options": ["About 100 times 💭", "Only when I'm awake ☀️", "Just once... because you never leave my mind! ❤️", "Every single second ⏱️"],
+      "correctIndex": 2,
+      "explanation": "You entered my heart and decided to stay forever. You're always on my mind! 🥰"
+    },
+    {
+      "id": 20,
+      "question": "What is my ultimate promise to you?",
+      "options": ["To always make you laugh 😂", "To hold your hand through every storm ⛈️", "To love you more today than yesterday 💕", "To cherish and love you forever & always ❤️"],
+      "correctIndex": 3,
+      "explanation": "Forever & always, in every lifetime, my heart belongs to you. ❤️✨"
+    }
+  ],
+  "loveLetter": {
+    "title": "To My Dearest Love,",
+    "paragraphs": [
+      "Thank you for embarking on this little romantic journey with me today. Every question in this quiz is a tiny reflection of the massive love I hold in my heart for you.",
+      "From the moment you entered my life, everything became brighter, warmer, and infinitely more beautiful. You have shown me what true love, laughter, and companionship really mean.",
+      "No matter where life takes us, through every storm and every celebration, I promise to stand by your side, hold your hand tight, and love you more with every passing sunrise.",
+      "You are my favorite hello, my hardest goodbye, my best friend, and my soulmate. I love you infinitely! ❤️"
+    ],
+    "signature": "Forever Yours,\nYour Devoted Love ❤️"
+  },
+  "videoMessage": {
+    "enabled": true,
+    "badge": "A Special Secret Video Message 🎥",
+    "title": "Watch this only after finishing everything ❤️",
+    "subtitle": "I recorded a special message just for you, from the bottom of my heart.",
+    "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-couple-holding-hands-and-walking-in-a-park-41555-large.mp4",
+    "posterUrl": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1200&q=80",
+    "note": "Tip: You can easily replace this video with your own personal video clip by updating the videoUrl in data/quiz-data.json or dropping your video file into the project! 🎬❤️"
+  },
+  "gallery": [
+    {
+      "id": 1,
+      "title": "Where It All Began",
+      "date": "The First Chapter",
+      "caption": "The sweet moment when our story unfolded.",
+      "imageUrl": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80",
+      "category": "Firsts"
+    },
+    {
+      "id": 2,
+      "title": "Romantic Sunset Walk",
+      "date": "Golden Hour",
+      "caption": "Hand in hand under the painted sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80",
+      "category": "Dates"
+    },
+    {
+      "id": 3,
+      "title": "Cozy Rainy Afternoon",
+      "date": "Warm Hugs & Coffee",
+      "caption": "When the world outside faded away.",
+      "imageUrl": "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80",
+      "category": "Memories"
+    },
+    {
+      "id": 4,
+      "title": "Our Favorite Date Night",
+      "date": "Candlelight Magic",
+      "caption": "Laughter, good food, and endless smiles.",
+      "imageUrl": "https://images.unsplash.com/photo-1529634597503-139d362ae83a?auto=format&fit=crop&w=800&q=80",
+      "category": "Dates"
+    },
+    {
+      "id": 5,
+      "title": "Under Starry Skies",
+      "date": "Midnight Dreams",
+      "caption": "Making wishes for a lifetime together.",
+      "imageUrl": "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80",
+      "category": "Memories"
+    },
+    {
+      "id": 6,
+      "title": "Forever & Always",
+      "date": "Today & Tomorrow",
+      "caption": "Just the beginning of our infinite adventure.",
+      "imageUrl": "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&q=80",
+      "category": "Firsts"
+    }
+  ],
+  "timeline": [
+    {
+      "date": "Chapter 1",
+      "title": "The First Spark ✨",
+      "description": "The unforgettable moment we first talked and connected. Fate worked its magic!",
+      "icon": "💬"
+    },
+    {
+      "date": "Chapter 2",
+      "title": "Our First Date 🌹",
+      "description": "Butterflies in the stomach, warm smiles, and hours feeling like minutes.",
+      "icon": "☕"
+    },
+    {
+      "date": "Chapter 3",
+      "title": "Confessing Our Love 💕",
+      "description": "When 'I like you' turned into 'I love you with all my heart'.",
+      "icon": "❤️"
+    },
+    {
+      "date": "Chapter 4",
+      "title": "Endless Adventures ✈️",
+      "description": "Trips, late-night talks, lazy Sundays, and thousands of beautiful memories.",
+      "icon": "🌟"
+    },
+    {
+      "date": "Chapter 5",
+      "title": "Our Next Anniversary 🥂",
+      "description": "Counting down the days to celebrate another milestone of love together!",
+      "icon": "💍"
+    }
+  ],
+  "secretMessage": "Congratulations on finding my hidden heart! 💖 You mean more to me than words could ever capture. Here is a free coupon for: ONE BIG TIGHT HUG & A CUSTOM DATE NIGHT OF YOUR CHOICE! 🎟️✨"
+}

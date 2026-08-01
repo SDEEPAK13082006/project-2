@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Love Quiz ❤️ - A Romantic Interactive Story</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="A magical, elegant, and interactive romantic quiz experience created with endless love. Discover how well you know each other!">
+  <meta name="theme-color" content="#ffb6c1">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/particle.css">
+</head>
+<body>
+
+  <!-- Ambient Glow Backgrounds -->
+  <div class="ambient-blur ambient-blur-1"></div>
+  <div class="ambient-blur ambient-blur-2"></div>
+
+  <!-- Interactive Floating Heart Particle Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- TOP NAVIGATION CONTROLS -->
+  <header class="top-navbar">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="brand-logo font-heading text-accent fw-bold fs-4">
+        Our Love Quiz <span class="heart-pulse-icon fs-5 align-middle ms-1">❤️</span>
+      </div>
+      <div class="nav-controls">
+        <!-- Share Link Generator Modal Button -->
+        <button id="btn-open-share-modal" class="icon-btn text-accent" title="Generate Shareable Partner Link 💌" aria-label="Share Link">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+
+        <!-- View Submissions/Results Modal Button -->
+        <button id="btn-open-submissions-modal" class="icon-btn text-primary" title="View Partner Results 📊" aria-label="View Partner Results">
+          <i class="fa-solid fa-chart-pie"></i>
+        </button>
+
+        <!-- Audio Play/Pause Button -->
+        <button id="btn-toggle-audio" class="icon-btn" title="Toggle Romantic Music" aria-label="Toggle Romantic Music">
+          <i class="fa-solid fa-music"></i>
+        </button>
+        <!-- Sound Mute Button -->
+        <button id="btn-toggle-sound" class="icon-btn" title="Toggle Sound Effects" aria-label="Toggle Sound Effects">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+        <!-- Theme Toggle (Day/Night) -->
+        <button id="btn-toggle-theme" class="icon-btn" title="Toggle Day/Night Romance Theme" aria-label="Toggle Day/Night Romance Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <!-- Restart Quiz Button -->
+        <button id="btn-restart-quiz" class="icon-btn" title="Restart Quiz" aria-label="Restart Quiz">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER WITH DYNAMIC VIEWS -->
+  <main id="app-container" class="container">
+
+    <!-- ==========================================
+         VIEW 1: HERO / LANDING PAGE
+         ========================================== -->
+    <section id="view-hero" class="view-section text-center">
+      <div class="row justify-content-center w-100">
+        <div class="col-12 col-md-10 col-lg-8">
+          <div class="glass-card">
+            <!-- Pulsing Heart Icon (Interactive Easter Egg Trigger) -->
+            <div class="mb-3">
+              <span id="hero-heart-mascot" class="heart-pulse-icon" title="Click me for a romantic surprise!">❤️</span>
+            </div>
+
+            <h1 class="hero-title font-heading">Welcome to Our Love Quiz ❤️</h1>
+            <p class="hero-subtitle">Let's see how well you know me, <span id="hero-nickname-display" class="fw-bold text-accent">My Love</span>.</p>
+
+            <!-- Personalized Nickname Input Field -->
+            <div class="mb-4 col-11 col-sm-8 mx-auto">
+              <label for="input-partner-nickname" class="form-label text-muted small fw-semibold">Personalize Partner Nickname:</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0 text-accent"><i class="fa-solid fa-heart"></i></span>
+                <input type="text" id="input-partner-nickname" class="form-control bg-transparent border-start-0 text-center fw-bold" value="My Sweetheart" placeholder="Enter Nickname...">
+              </div>
+            </div>
+
+            <!-- Start Journey CTA & Share Link CTA -->
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-3">
+              <button id="btn-start-journey" class="btn-romantic btn-lg">
+                Start Our Journey <i class="fa-solid fa-sparkles ms-1"></i>
+              </button>
+              <button id="btn-hero-share" class="btn-outline-romantic btn-lg">
+                Send To My Love 💌
+              </button>
+            </div>
+
+            <div class="mt-4 text-muted small italic">
+              <i class="fa-solid fa-lock-open me-1"></i> Crafted with pure love & sweet memories
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: QUIZ FLOW
+         ========================================== -->
+    <section id="view-quiz" class="view-section hidden-view">
+      <div class="row justify-content-center w-100">
+        <div class="col-12 col-md-10 col-lg-8">
+          <div class="glass-card">
+            <!-- Quiz Header Bar -->
+            <div class="quiz-header d-flex justify-content-between align-items-center mb-2">
+              <span id="quiz-question-counter" class="question-counter">Question 1 of 20</span>
+              <span id="quiz-timer-badge" class="timer-badge">
+                <i class="fa-regular fa-clock me-1"></i> <span id="timer-seconds">25</span>s
+              </span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+              <div id="quiz-progress-bar" class="progress-bar-fill"></div>
+            </div>
+
+            <!-- Question Text -->
+            <h2 id="quiz-question-text" class="question-text font-heading text-center">
+              Where did our story first begin?
+            </h2>
+
+            <!-- Options Grid (4 Buttons) -->
+            <div id="quiz-options-container" class="options-grid mb-3">
+              <!-- Dynamically populated options -->
+            </div>
+
+            <!-- Sweet Explanation Card (Revealed on Answer) -->
+            <div id="quiz-explanation-box" class="explanation-box d-none">
+              <div class="d-flex align-items-start">
+                <span class="fs-3 me-3 text-accent"><i class="fa-solid fa-quote-left"></i></span>
+                <div>
+                  <h5 id="explanation-header" class="fw-bold mb-1">A Sweet Memory ❤️</h5>
+                  <p id="explanation-text" class="mb-0 text-muted">
+                    That very first message sparked a flame that has grown brighter every single day!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interstitial Romantic Quote -->
+            <div id="quiz-quote-interstitial" class="quote-interstitial d-none">
+              <i class="fa-solid fa-heart me-2 text-accent"></i>
+              <span id="quote-text">“In all the world, there is no heart for me like yours.”</span>
+            </div>
+
+            <!-- Next Question CTA -->
+            <div id="quiz-next-container" class="mt-4 text-center d-none">
+              <button id="btn-next-question" class="btn-romantic">
+                Next Memory <i class="fa-solid fa-arrow-right ms-2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: RESULTS / SCORE PAGE
+         ========================================== -->
+    <section id="view-results" class="view-section hidden-view text-center">
+      <div class="row justify-content-center w-100">
+        <div class="col-12 col-md-10 col-lg-8">
+          <div class="glass-card">
+            <span class="fs-1 text-accent mb-2 d-inline-block">🏆</span>
+            <h2 class="font-heading fs-1 mb-3">Our Love Quiz Score</h2>
+
+            <!-- Circular Animated Score Indicator -->
+            <div class="score-circle-wrapper">
+              <svg class="score-svg" viewBox="0 0 160 160">
+                <defs>
+                  <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ff4081" />
+                    <stop offset="100%" stop-color="#d81b60" />
+                  </linearGradient>
+                </defs>
+                <circle class="score-bg-circle" cx="80" cy="80" r="70" />
+                <circle id="score-progress-circle" class="score-progress-circle" cx="80" cy="80" r="70" />
+              </svg>
+              <div class="score-text-inside">
+                <div id="result-score-num" class="score-num">0</div>
+                <div class="score-label">Out of 20</div>
+              </div>
+            </div>
+
+            <!-- Tier Message -->
+            <h3 id="result-tier-message" class="font-script fs-1 text-accent my-3">
+              "You know me almost perfectly ❤️"
+            </h3>
+            <p id="result-nickname-msg" class="text-muted fs-5 mb-4">
+              Thank you for being such an amazing partner, <span class="partner-name-tag fw-bold">My Sweetheart</span>!
+            </p>
+
+            <!-- Submission status badge -->
+            <div id="backend-status-badge" class="alert alert-success d-none mb-3 py-2">
+              <i class="fa-solid fa-check-circle me-1"></i> Your score has been sent to your partner! ❤️
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex flex-wrap justify-content-center gap-3 mb-3">
+              <button id="btn-download-certificate" class="btn-outline-romantic">
+                <i class="fa-solid fa-file-arrow-down me-2"></i> Download Love Certificate 📜
+              </button>
+              <button id="btn-open-love-story" class="btn-romantic">
+                Unfold Our Love Story ❤️ <i class="fa-solid fa-heart ms-2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 4: FINAL SURPRISE & LOVE STORY PAGE
+         ========================================== -->
+    <section id="view-story" class="view-section hidden-view">
+      <div class="w-100">
+
+        <!-- Story Header -->
+        <div class="story-header">
+          <span class="fs-1">💖</span>
+          <h2 class="story-title font-heading">Our Love Story & Memories</h2>
+          <p class="text-muted fs-5">A timeless celebration of our journey together</p>
+        </div>
+
+        <!-- 1. Typewriter Love Letter Card -->
+        <div class="letter-paper">
+          <h3 id="letter-title" class="letter-title">To My Dearest Love,</h3>
+          <div id="letter-body" class="letter-body">
+            <!-- Typewriter effect appends text here -->
+          </div>
+          <div id="letter-signature" class="letter-signature">
+            Forever Yours,<br>Your Devoted Love ❤️
+          </div>
+        </div>
+
+        <!-- 2. Memory Gallery Section -->
+        <div class="my-5">
+          <div class="text-center mb-4">
+            <h3 class="font-heading fs-2">Our Favorite Memories 📸</h3>
+            <p class="text-muted">Moments frozen in time, forever in my heart</p>
+
+            <!-- Gallery Filter Buttons -->
+            <div class="btn-group mt-2" role="group" aria-label="Gallery Filters">
+              <button type="button" class="btn btn-outline-danger btn-sm filter-btn active" data-filter="all">All</button>
+              <button type="button" class="btn btn-outline-danger btn-sm filter-btn" data-filter="Firsts">Firsts</button>
+              <button type="button" class="btn btn-outline-danger btn-sm filter-btn" data-filter="Dates">Dates</button>
+              <button type="button" class="btn btn-outline-danger btn-sm filter-btn" data-filter="Memories">Memories</button>
+            </div>
+          </div>
+
+          <!-- Polaroid Grid -->
+          <div id="gallery-grid" class="gallery-grid">
+            <!-- Dynamically populated photo cards -->
+          </div>
+        </div>
+
+        <!-- 3. Our Timeline Roadmap -->
+        <div class="my-5">
+          <div class="text-center mb-4">
+            <h3 class="font-heading fs-2">Our Roadmap of Love 📍</h3>
+            <p class="text-muted">Every chapter of us leads to something beautiful</p>
+          </div>
+
+          <div id="timeline-container" class="timeline-wrapper">
+            <!-- Dynamically populated timeline milestones -->
+          </div>
+        </div>
+
+        <!-- 4. Live Anniversary Countdown -->
+        <div class="glass-card text-center my-5">
+          <span class="fs-1 text-accent">⏳</span>
+          <h3 class="font-heading fs-2 mb-2">Countdown to Our Next Milestone</h3>
+          <p class="text-muted">Counting down every second until our next celebration!</p>
+
+          <div class="countdown-grid">
+            <div class="countdown-box">
+              <div id="cd-days" class="countdown-val">00</div>
+              <div class="countdown-unit">Days</div>
+            </div>
+            <div class="countdown-box">
+              <div id="cd-hours" class="countdown-val">00</div>
+              <div class="countdown-unit">Hours</div>
+            </div>
+            <div class="countdown-box">
+              <div id="cd-mins" class="countdown-val">00</div>
+              <div class="countdown-unit">Minutes</div>
+            </div>
+            <div class="countdown-box">
+              <div id="cd-secs" class="countdown-val">00</div>
+              <div class="countdown-unit">Seconds</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. "Open My Heart ❤️" Secret Button -->
+        <div class="text-center my-5">
+          <button id="btn-open-my-heart" class="btn-romantic btn-lg px-5">
+            <i class="fa-solid fa-gift me-2"></i> Open My Heart ❤️
+          </button>
+        </div>
+
+        <!-- 6. DEDICATED PERSONAL VIDEO MESSAGE SECTION -->
+        <div id="video-message-section" class="my-5">
+          <div class="glass-card text-center position-relative overflow-hidden p-4 p-md-5">
+            <div class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill fw-bold mb-3 fs-6">
+              <i class="fa-solid fa-video me-1"></i> <span id="video-badge-text">A Special Secret Video Message 🎥</span>
+            </div>
+            <h2 id="video-title-text" class="font-heading fs-1 text-accent mb-2">
+              Watch this only after finishing everything ❤️
+            </h2>
+            <p id="video-subtitle-text" class="text-muted fs-5 mb-4">
+              I recorded a special message just for you, from the bottom of my heart.
+            </p>
+
+            <!-- Video Frame Container -->
+            <div class="romantic-video-frame mx-auto shadow-lg position-relative">
+              <video id="personal-love-video" class="w-100 rounded-4" controls poster="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1200&q=80" preload="metadata">
+                <source id="video-source-elem" src="https://assets.mixkit.co/videos/preview/mixkit-couple-holding-hands-and-walking-in-a-park-41555-large.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="video-heart-badge">❤️</div>
+            </div>
+
+            <!-- Romantic Note -->
+            <div class="mt-4 text-center">
+              <p id="video-note-text" class="font-script fs-3 text-accent mb-1">
+                "Every moment with you is my favorite video." 💖
+              </p>
+              <div class="small text-muted italic">
+                <i class="fa-solid fa-film me-1"></i> You can easily edit or upload your own video in <code>data/quiz-data.json</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       MODALS & OVERLAYS
+       ========================================== -->
+
+  <!-- Share Link Generator Modal -->
+  <div class="modal fade" id="shareLinkModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-0">
+        <div class="modal-header border-0 pb-0">
+          <h4 class="font-heading text-accent mb-0"><i class="fa-solid fa-paper-plane me-2"></i> Send Link to Your Partner</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small">Generate a personalized link to send to your partner. When they open it, your custom names and video will load automatically!</p>
+          
+          <div class="mb-3">
+            <label for="share-input-to" class="form-label fw-bold small text-muted">Partner's Name / Nickname (To):</label>
+            <input type="text" id="share-input-to" class="form-control" value="My Sweetheart" placeholder="e.g. My Sunshine">
+          </div>
+
+          <div class="mb-3">
+            <label for="share-input-from" class="form-label fw-bold small text-muted">Your Name / Nickname (From):</label>
+            <input type="text" id="share-input-from" class="form-control" value="Your Devoted Love" placeholder="e.g. Honey">
+          </div>
+
+          <div class="mb-3">
+            <label for="share-input-video" class="form-label fw-bold small text-muted">Custom Video URL (Optional):</label>
+            <input type="text" id="share-input-video" class="form-control" placeholder="Direct MP4 video URL or leave blank for default">
+          </div>
+
+          <!-- Generated Link Display -->
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-accent">Your Shareable Link:</label>
+            <div class="input-group">
+              <input type="text" id="generated-share-url" class="form-control bg-light fs-6" readonly>
+              <button id="btn-copy-share-url" class="btn btn-danger" type="button">
+                <i class="fa-solid fa-copy me-1"></i> Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Share Buttons -->
+          <div class="d-flex gap-2 mt-3">
+            <a id="btn-whatsapp-share" href="#" target="_blank" class="btn btn-success flex-fill fw-semibold">
+              <i class="fa-brands fa-whatsapp me-1"></i> WhatsApp
+            </a>
+            <a id="btn-telegram-share" href="#" target="_blank" class="btn btn-info text-white flex-fill fw-semibold">
+              <i class="fa-brands fa-telegram me-1"></i> Telegram
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partner Submissions / Results Modal -->
+  <div class="modal fade" id="submissionsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content glass-card border-0">
+        <div class="modal-header border-0 pb-0">
+          <h4 class="font-heading text-accent mb-0"><i class="fa-solid fa-chart-pie me-2"></i> Partner Quiz Results</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small">View all quiz submissions sent by your partner when they completed the quiz online.</p>
+          <div id="submissions-list-container" class="mt-3">
+            <div class="text-center text-muted py-4">
+              <i class="fa-solid fa-spinner fa-spin fs-2 mb-2"></i>
+              <p>Loading partner results...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secret Heart Coupon Modal -->
+  <div class="modal fade" id="heartSecretModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card border-0">
+        <div class="modal-body modal-heart-content">
+          <span class="fs-1 text-accent">🎁</span>
+          <h3 class="font-heading fs-2 my-2">A Secret Message For You</h3>
+          <p id="secret-message-text" class="text-muted">
+            You hold the key to my heart! 💖
+          </p>
+          <div class="coupon-ticket">
+            <div class="font-script fs-2 text-accent">Love Coupon 🎟️</div>
+            <div class="fw-bold my-2 text-main">Valid for: One Big Warm Hug & Romantic Date Night!</div>
+            <div class="small text-muted">No expiration date • Redeemable anytime ❤️</div>
+          </div>
+          <button type="button" class="btn-romantic mt-4" data-bs-dismiss="modal">
+            I Love You! 🥰
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photo Lightbox Modal -->
+  <div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content glass-card p-2 border-0">
+        <div class="modal-body p-0 text-center position-relative">
+          <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
+          <img id="lightbox-img" src="" class="img-fluid rounded" alt="Memory Photo">
+          <h4 id="lightbox-title" class="font-heading text-white mt-3 mb-1"></h4>
+          <p id="lightbox-caption" class="font-script text-accent fs-4 mb-2"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom App Scripts -->
+  <script src="js/sound-engine.js"></script>
+  <script src="js/particle-system.js"></script>
+  <script src="js/certificate.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/quiz-engine.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
